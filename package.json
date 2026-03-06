@@ -1,0 +1,12 @@
+{
+  "name": "vortex-landing",
+  "version": "1.0.0",
+  "description": "Vortex AI Agents landing page — vortexagents.ai",
+  "scripts": {
+    "dev": "npx serve . -p 3000 --no-clipboard",
+    "start": "npx serve . -p 3000"
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
