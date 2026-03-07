@@ -135,7 +135,7 @@ const T = {
 const htmlKeys = new Set([
   'hero_sub','hero_h1_line1','hero_h1_line2','hero_h1_line3',
   'prob_title','prob_lead','sol_title','sol_desc',
-  'vert_title','med_price','fr_price','why_title','why_lead',
+  'vert_title','med_title','fr_title','med_price','fr_price','why_title','why_lead',
   'proc_title','cta_title','testi_title'
 ]);
 
