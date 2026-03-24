@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<script type="application/ld+json">
+<script id="ld-local-business" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -21,6 +21,24 @@
   "priceRange": "$400-$500/month",
   "knowsAbout": ["AI agents", "lead response automation", "appointment scheduling", "Google review management", "freight brokerage automation", "medical practice automation", "dental practice automation"]
 }
+</script>
+<script>
+(function() {
+  fetch("https://api.vortexagents.ai/api/v1/site-config/ai_snippet")
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      if (!d || !d.value) return;
+      var el = document.getElementById("ld-local-business");
+      if (el) {
+        try {
+          var current = JSON.parse(el.textContent);
+          current.description = d.value;
+          el.textContent = JSON.stringify(current);
+        } catch(e) {}
+      }
+    })
+    .catch(function() {});
+})();
 </script>
 </head>
 <body>
