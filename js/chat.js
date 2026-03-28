@@ -91,8 +91,12 @@ async function sendMsg(text) {
         business_id: VORTEX_BUSINESS,
       }),
     });
-    const data = await res.json();
     hideTyping();
+    if (!res.ok) {
+      const errText = res.status === 429 ? 'Too many messages — please wait a moment and try again.' : `Error ${res.status}. Please try again.`;
+      addMsg(errText, 'bot'); btn.disabled = false; inp.focus(); return;
+    }
+    const data = await res.json();
     const reply = data.message || 'Something went wrong. Try again.';
     addMsg(reply, 'bot');
     const lang = document.documentElement.lang || 'en';
