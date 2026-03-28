@@ -386,8 +386,13 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:44px
 /* ── CHAT MOBILE ── */
 @media(max-width:480px){
   #chat-bubble{bottom:16px;right:16px;}
-  #chat-win{width:calc(100vw - 32px);right:-16px;max-height:85vh;}
-  .ch-msgs{padding:12px;}
+  #chat-win{
+    position:fixed;
+    top:0;left:0;right:0;bottom:72px;
+    width:100vw;max-height:none;height:calc(100vh - 72px);
+    border-radius:0;
+  }
+  .ch-msgs{padding:12px;flex:1;}
 }
 
 /* ── RESPONSIVE ── */
