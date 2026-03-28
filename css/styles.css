@@ -386,7 +386,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:44px
 /* ── CHAT MOBILE ── */
 @media(max-width:480px){
   #chat-bubble{bottom:16px;right:16px;}
-  #chat-win{width:calc(100vw - 32px);right:-16px;max-height:72vh;}
+  #chat-win{width:calc(100vw - 32px);right:-16px;max-height:85vh;}
   .ch-msgs{padding:12px;}
 }
 
