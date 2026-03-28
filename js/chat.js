@@ -13,10 +13,10 @@ const quickRepliesES = [
 let chatOpen = false;
 
 function getSessionId() {
-  let sid = localStorage.getItem('vx_session');
+  let sid = sessionStorage.getItem('vx_session');
   if (!sid) {
     sid = 'vx_' + Math.random().toString(36).slice(2, 11);
-    localStorage.setItem('vx_session', sid);
+    sessionStorage.setItem('vx_session', sid);
   }
   return sid;
 }
