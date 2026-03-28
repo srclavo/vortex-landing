@@ -150,4 +150,10 @@ function setLang(lang){
   document.documentElement.lang=lang;
   const inp=document.getElementById('ch-input');
   if(inp) inp.placeholder=lang==='es'?'Escríbeme...':'Ask me anything...';
+  // Reset chat greeting if no user messages yet
+  const msgs=document.getElementById('ch-msgs');
+  if(msgs && msgs.querySelectorAll('.msg.user').length===0){
+    msgs.innerHTML='';
+    if(typeof initChat==='function') initChat();
+  }
 }
