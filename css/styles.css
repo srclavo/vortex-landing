@@ -302,11 +302,11 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:44px
 #chat-bubble{position:fixed;bottom:26px;right:26px;z-index:1000;}
 #chat-toggle{width:58px;height:58px;border-radius:50%;background:var(--green);
   border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 0 0 rgba(0,255,136,.5);
-  animation:pulse 2.5s ease-out infinite;transition:transform .2s,background .2s;}
+  box-shadow:0 0 0 0 rgba(0,255,136,.35);
+  animation:pulse 4s ease-out infinite;transition:transform .2s,background .2s;}
 #chat-toggle:hover{transform:scale(1.08);background:#00ffaa;}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,255,136,.5)}
-  70%{box-shadow:0 0 0 18px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,255,136,.35)}
+  70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .chat-badge{position:absolute;top:-3px;right:-3px;width:17px;height:17px;
   border-radius:50%;background:#ff4757;border:2px solid var(--bg);
   font-size:.58rem;font-weight:700;color:#fff;
@@ -375,6 +375,13 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:44px
 .ch-powered{text-align:center;padding:5px;
   font-family:'JetBrains Mono',monospace;font-size:.53rem;
   color:rgba(240,244,248,.18);letter-spacing:.1em;border-top:1px solid var(--border);}
+#chat-tooltip{position:absolute;bottom:68px;right:0;
+  background:var(--surface);border:1px solid rgba(0,255,136,.22);
+  border-radius:10px;padding:9px 14px;font-size:.8rem;color:var(--white);
+  white-space:nowrap;box-shadow:0 6px 24px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease,transform .35s ease;transform:translateY(6px);}
+#chat-tooltip.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){

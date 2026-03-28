@@ -4,10 +4,10 @@ const VORTEX_KEY      = 'vortex_public_2026';
 const VORTEX_BUSINESS = 'vortex';
 
 const quickRepliesEN = [
-  ["I run a dental practice","I'm a freight broker","Tell me more","Pricing?"]
+  ["Show me pricing","Book a demo","How does it work?","Talk to a human"]
 ];
 const quickRepliesES = [
-  ["Tengo un consultorio","Soy broker de carga","Cuéntame más","¿Precios?"]
+  ["Ver precios","Agendar demo","¿Cómo funciona?","Hablar con alguien"]
 ];
 
 let chatOpen = false;
@@ -26,8 +26,7 @@ function toggleChat() {
   document.getElementById('chat-win').classList.toggle('open', chatOpen);
   document.getElementById('ico-chat').style.display = chatOpen ? 'none' : 'block';
   document.getElementById('ico-close').style.display = chatOpen ? 'block' : 'none';
-  const badge = document.querySelector('.chat-badge');
-  if (badge) badge.remove();
+  document.getElementById('chat-tooltip').classList.remove('visible');
   if (chatOpen && document.getElementById('ch-msgs').children.length === 0) initChat();
   if (chatOpen) setTimeout(() => document.getElementById('ch-input').focus(), 180);
 }
@@ -63,8 +62,8 @@ function setQR(opts) {
 function initChat() {
   const lang = document.documentElement.lang || 'en';
   const greet = lang === 'es'
-    ? "Hola! Soy DARA, agente de Vortex AI Agents.\n\n¿Qué tipo de negocio tienes?"
-    : "Hey! I'm DARA, Vortex AI Agents sales agent.\n\nWhat type of business do you run?";
+    ? "Hola! Soy DARA 👋\n\nPuedo responder preguntas sobre nuestros agentes de IA, mostrarte precios o agendarte una demo.\n\n¿En qué te puedo ayudar?"
+    : "Hi! I'm DARA 👋\n\nI can answer questions about our AI agents, walk you through pricing, or book a quick demo.\n\nWhat can I help you with?";
   setTimeout(() => {
     addMsg(greet, 'bot');
     setQR(lang === 'es' ? quickRepliesES[0] : quickRepliesEN[0]);
@@ -114,4 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
   inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(inp.value); } });
   inp.addEventListener('input', () => { inp.style.height = 'auto'; inp.style.height = Math.min(inp.scrollHeight, 90) + 'px'; });
   document.getElementById('ch-send').addEventListener('click', () => sendMsg(inp.value));
+
+  // Invite tooltip: appears after 5s, disappears after 15s or when chat opens
+  setTimeout(() => { if (!chatOpen) document.getElementById('chat-tooltip').classList.add('visible'); }, 5000);
+  setTimeout(() => { document.getElementById('chat-tooltip').classList.remove('visible'); }, 15000);
 });
