@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "abstorage.vortexagents.ai" }],
+      "destination": "/abstorage/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "abstorage.vortexagents.ai" }],
+      "destination": "/abstorage/$1"
+    }
+  ]
+}
