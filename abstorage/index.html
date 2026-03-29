@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABStorage · Motor Operativo IA — Demo en Vivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080a0f;
+      --surface: #0d1117;
+      --surface2: #141920;
+      --border: rgba(255,255,255,0.07);
+      --green: #00ff88;
+      --green-dim: rgba(0,255,136,0.12);
+      --green-glow: rgba(0,255,136,0.35);
+      --blue: #00c8ff;
+      --blue-dim: rgba(0,200,255,0.10);
+      --orange: #ff9f43;
+      --white: #f0f4f8;
+      --muted: rgba(240,244,248,0.45);
+      --radius: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Topbar ─────────────────────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .brand { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: .08em; }
+    .brand span { color: var(--green); }
+    .pill {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500;
+      letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .pill-green { background: var(--green-dim); border: 1px solid rgba(0,255,136,.3); color: var(--green); }
+    .pill-blue  { background: var(--blue-dim);  border: 1px solid rgba(0,200,255,.3); color: var(--blue); }
+    .topbar-nav { display: flex; gap: 24px; align-items: center; }
+    .topbar-nav a {
+      font-size: 13px; color: var(--muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .topbar-nav a:hover { color: var(--white); }
+    .btn-cta {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 8px 18px; border-radius: 6px;
+      background: var(--green); color: #080a0f; border: none; cursor: pointer;
+      text-decoration: none; transition: opacity .2s;
+    }
+    .btn-cta:hover { opacity: .85; }
+
+    /* ── Layout ─────────────────────────────────────────────────────────── */
+    .section { padding: 80px 40px; }
+    .inner { max-width: 1160px; margin: 0 auto; }
+    .section-dark { background: var(--surface); }
+
+    /* ── Eyebrow ─────────────────────────────────────────────────────────── */
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--green);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    }
+    .eyebrow::before {
+      content: ''; display: block; width: 24px; height: 1px; background: var(--green);
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    .hero { padding: 100px 40px 80px; }
+    .hero-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: center;
+    }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.2rem, 6vw, 5.5rem);
+      line-height: .96; letter-spacing: .02em; margin-bottom: 24px;
+    }
+    .hero h1 .hl { color: var(--green); }
+    .hero p { font-size: 16px; color: var(--muted); max-width: 480px; margin-bottom: 36px; }
+    .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 8px;
+      background: var(--green); color: #080a0f;
+      font-weight: 600; font-size: 14px; text-decoration: none;
+      transition: box-shadow .2s, opacity .2s; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { box-shadow: 0 0 20px var(--green-glow); opacity: .9; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 8px;
+      border: 1px solid var(--border); color: var(--muted);
+      font-size: 14px; text-decoration: none; transition: color .2s, border-color .2s;
+      background: transparent; cursor: pointer;
+    }
+    .btn-ghost:hover { color: var(--white); border-color: rgba(255,255,255,.2); }
+
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+      margin-top: 48px;
+    }
+    .stat {
+      background: var(--surface); padding: 20px 24px;
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem;
+      color: var(--green); letter-spacing: .04em; line-height: 1;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* Hero right — WhatsApp QR card */
+    .wa-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+    .wa-card-title {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+    }
+    .wa-number {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+      letter-spacing: .06em; color: var(--green);
+    }
+    .wa-qr {
+      width: 160px; height: 160px;
+      background: #fff; border-radius: 10px; padding: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .wa-qr img { width: 100%; height: 100%; object-fit: contain; }
+    .wa-qr-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 200%; animation: shimmer 1.5s infinite;
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      color: #888; font-size: 11px; text-align: center;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .wa-hint { font-size: 12px; color: var(--muted); text-align: center; }
+    .wa-hint strong { color: var(--white); }
+    .wa-actions { display: flex; gap: 8px; }
+    .wa-btn {
+      padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      text-decoration: none; transition: all .2s; cursor: pointer; border: none;
+    }
+    .wa-btn-green {
+      background: #25D366; color: #fff;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .wa-btn-green:hover { background: #1ebe5d; }
+    .wa-btn-outline {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .wa-btn-outline:hover { color: var(--white); border-color: rgba(255,255,255,.2); }
+
+    /* ── Videos ──────────────────────────────────────────────────────────── */
+    .videos-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    }
+    .video-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+    }
+    .video-thumb {
+      aspect-ratio: 16/9; background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; cursor: pointer;
+    }
+    .video-thumb iframe {
+      width: 100%; height: 100%; border: none;
+    }
+    .video-thumb-placeholder {
+      width: 100%; height: 100%; background: var(--surface);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; color: var(--muted);
+    }
+    .play-btn {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--green-dim); border: 1px solid rgba(0,255,136,.3);
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .video-thumb:hover .play-btn {
+      background: var(--green); box-shadow: 0 0 20px var(--green-glow);
+    }
+    .play-icon { color: var(--green); font-size: 20px; margin-left: 3px; }
+    .video-thumb:hover .play-icon { color: #080a0f; }
+    .video-meta { padding: 20px 24px; }
+    .video-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--blue); margin-bottom: 8px;
+    }
+    .video-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+    .video-desc { font-size: 13px; color: var(--muted); }
+
+    /* ── Cotizador web ───────────────────────────────────────────────────── */
+    .cotizador-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
+    }
+    .cotizador-form {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 32px;
+    }
+    .form-title { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1/-1; }
+    label {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+    }
+    select, input[type="number"], input[type="text"] {
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--white); padding: 10px 14px; border-radius: 8px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
+      transition: border-color .2s; outline: none; width: 100%;
+    }
+    select:focus, input:focus { border-color: rgba(0,255,136,.4); }
+    .form-footer { margin-top: 20px; display: flex; gap: 10px; align-items: center; }
+    .btn-quote {
+      flex: 1; padding: 12px; border-radius: 8px;
+      background: var(--green); color: #080a0f; border: none;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: box-shadow .2s, opacity .2s; display: flex;
+      align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-quote:hover { box-shadow: 0 0 20px var(--green-glow); }
+    .btn-quote:disabled { opacity: .5; cursor: not-allowed; }
+    .spinner {
+      width: 16px; height: 16px; border: 2px solid rgba(0,0,0,.2);
+      border-top-color: #080a0f; border-radius: 50%;
+      animation: spin .7s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Result card */
+    .quote-result {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 32px;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .3s, transform .3s;
+      pointer-events: none;
+    }
+    .quote-result.visible { opacity: 1; transform: none; pointer-events: all; }
+    .quote-empty {
+      height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; color: var(--muted); text-align: center; padding: 48px 24px;
+    }
+    .quote-empty-icon { font-size: 40px; opacity: .4; }
+    .quote-folio {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .quote-route {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+      letter-spacing: .04em; color: var(--white); margin-bottom: 20px;
+    }
+    .quote-route span { color: var(--green); }
+    .quote-lines { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .q-line {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px;
+    }
+    .q-line-label { color: var(--muted); }
+    .q-line-value { font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+    .q-divider { height: 1px; background: var(--border); margin: 4px 0; }
+    .q-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .q-total-label { font-weight: 600; font-size: 15px; }
+    .q-total-value {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+      letter-spacing: .04em; color: var(--green);
+    }
+    .semaforo {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 20px; font-size: 12px;
+      font-family: 'JetBrains Mono', monospace; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .06em; margin-top: 16px;
+    }
+    .sem-VERDE   { background: rgba(0,255,136,.12); border: 1px solid rgba(0,255,136,.3); color: #00ff88; }
+    .sem-AMARILLO{ background: rgba(255,214,0,.12);  border: 1px solid rgba(255,214,0,.3);  color: #ffd700; }
+    .sem-NARANJA { background: rgba(255,159,67,.12); border: 1px solid rgba(255,159,67,.3); color: #ff9f43; }
+    .sem-ROJO    { background: rgba(255,80,80,.12);  border: 1px solid rgba(255,80,80,.3);  color: #ff5050; }
+    .fallback-note {
+      font-size: 11px; color: var(--muted); font-style: italic; margin-top: 8px;
+    }
+    .btn-wa-confirm {
+      margin-top: 20px; width: 100%; padding: 12px;
+      border-radius: 8px; background: #25D366; color: #fff; border: none;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      text-decoration: none; transition: background .2s;
+    }
+    .btn-wa-confirm:hover { background: #1ebe5d; }
+
+    /* ── Cómo funciona ───────────────────────────────────────────────────── */
+    .flow-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
+      position: relative;
+    }
+    .flow-grid::before {
+      content: ''; position: absolute; top: 36px; left: 10%; right: 10%;
+      height: 1px; background: linear-gradient(90deg, transparent, var(--border), var(--green), var(--border), transparent);
+    }
+    .flow-step { text-align: center; padding: 0 12px; }
+    .flow-num {
+      width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px;
+      background: var(--surface2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
+      color: var(--green); position: relative; z-index: 1;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .flow-step:hover .flow-num {
+      border-color: var(--green); box-shadow: 0 0 16px var(--green-glow);
+    }
+    .flow-agent {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--green);
+      margin-bottom: 6px;
+    }
+    .flow-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .flow-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Agentes grid ────────────────────────────────────────────────────── */
+    .agents-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .agent-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 22px 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .agent-card:hover { border-color: rgba(0,255,136,.25); transform: translateY(-2px); }
+    .agent-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .agent-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--green-dim); border: 1px solid rgba(0,255,136,.2);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .agent-code {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--green);
+    }
+    .agent-name { font-size: 14px; font-weight: 600; }
+    .agent-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .agent-status {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 12px; font-size: 11px;
+      font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .dot-blue  { background: var(--blue);  box-shadow: 0 0 6px var(--blue); }
+    .dot-grey  { background: #555; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    .footer {
+      padding: 40px 40px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: .08em; }
+    .footer-brand span { color: var(--green); }
+    .footer-note { font-size: 12px; color: var(--muted); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ── Error state ─────────────────────────────────────────────────────── */
+    .error-msg {
+      background: rgba(255,80,80,.08); border: 1px solid rgba(255,80,80,.25);
+      color: #ff6b6b; padding: 12px 16px; border-radius: 8px;
+      font-size: 13px; margin-top: 12px; display: none;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .topbar { padding: 14px 20px; }
+      .topbar-nav { display: none; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .wa-card { display: none; }
+      .section { padding: 60px 20px; }
+      .hero { padding: 60px 20px 48px; }
+      .cotizador-wrap { grid-template-columns: 1fr; }
+      .videos-grid { grid-template-columns: 1fr; }
+      .flow-grid { grid-template-columns: 1fr; gap: 24px; }
+      .flow-grid::before { display: none; }
+      .agents-grid { grid-template-columns: 1fr 1fr; }
+      .footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+    @media (max-width: 560px) {
+      .agents-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Topbar ─────────────────────────────────────────────────────────────── -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="brand">AB<span>Storage</span></div>
+    <div class="pill pill-green">Motor Operativo IA</div>
+    <div class="pill pill-blue">Demo en Vivo</div>
+  </div>
+  <div class="topbar-nav">
+    <a href="#cotizador">Cotizador</a>
+    <a href="#flujo">Cómo funciona</a>
+    <a href="#agentes">Agentes</a>
+    <a href="#videos">Videos</a>
+    <a href="https://vortexagents.ai" target="_blank" class="btn-cta">Vortex AI Agents ↗</a>
+  </div>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">ABStorage · Logistics Solutions</div>
+      <h1>Motor operativo<br><span class="hl">con IA</span><br>en producción</h1>
+      <p>9 agentes autónomos coordinando cotizaciones, operadores, seguimiento y reportes — directo en WhatsApp, sin fricción.</p>
+      <div class="hero-actions">
+        <a href="#cotizador" class="btn-primary">
+          <span>📦</span> Cotizar ahora
+        </a>
+        <a href="https://wa.me/15282609614?text=Hola,%20quiero%20una%20cotizaci%C3%B3n" target="_blank" class="btn-ghost">
+          <span>💬</span> Probar WhatsApp
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">9</div>
+          <div class="stat-label">Agentes activos</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">48H</div>
+          <div class="stat-label">Vigencia de cotización</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Disponibilidad</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp card -->
+    <div class="wa-card">
+      <div class="wa-card-title">Prueba el bot ahora</div>
+      <div class="wa-number">+1 528 260 9614</div>
+      <div class="wa-qr">
+        <!-- Replace src with actual QR image when available -->
+        <div class="wa-qr-placeholder">QR<br>próximamente</div>
+      </div>
+      <p class="wa-hint">Escanea o escríbenos en WhatsApp.<br>Prueba: <strong>"Mty a GDL, 15 ton de varilla"</strong></p>
+      <div class="wa-actions">
+        <a href="https://wa.me/15282609614?text=Hola,%20quiero%20una%20cotizaci%C3%B3n" target="_blank" class="wa-btn wa-btn-green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.52 5.845L0 24l6.336-1.495A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.819 9.819 0 01-5.003-1.373l-.358-.214-3.762.887.924-3.659-.234-.376A9.818 9.818 0 012.182 12C2.182 6.575 6.575 2.182 12 2.182S21.818 6.575 21.818 12 17.425 21.818 12 21.818z"/></svg>
+          Abrir chat
+        </a>
+        <button class="wa-btn wa-btn-outline" onclick="copyNumber()">Copiar número</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Videos ─────────────────────────────────────────────────────────────── -->
+<section class="section section-dark" id="videos">
+  <div class="inner">
+    <div class="eyebrow">Demo en video</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:.03em;margin-bottom:40px;">
+      Ve el sistema en acción
+    </h2>
+    <div class="videos-grid">
+      <!-- Video 1: placeholder — replace data-yt with actual YouTube embed ID -->
+      <div class="video-card" data-yt="">
+        <div class="video-thumb" onclick="loadVideo(this)">
+          <div class="video-thumb-placeholder">
+            <div class="play-btn"><span class="play-icon">▶</span></div>
+            <div style="font-size:13px;">Demo próximamente</div>
+          </div>
+        </div>
+        <div class="video-meta">
+          <div class="video-tag">Capa 1 · Motor Operativo</div>
+          <div class="video-title">Cotización completa en WhatsApp</div>
+          <div class="video-desc">Desde el primer mensaje hasta la confirmación del viaje — E1 a E6 en acción.</div>
+        </div>
+      </div>
+      <!-- Video 2: placeholder -->
+      <div class="video-card" data-yt="">
+        <div class="video-thumb" onclick="loadVideo(this)">
+          <div class="video-thumb-placeholder">
+            <div class="play-btn"><span class="play-icon">▶</span></div>
+            <div style="font-size:13px;">Demo próximamente</div>
+          </div>
+        </div>
+        <div class="video-meta">
+          <div class="video-tag">Capa 2 · Cuidado del Mercado</div>
+          <div class="video-title">Alta de operadores y seguimiento</div>
+          <div class="video-desc">E2 registra al operador, E5 actualiza el estado del flete en tiempo real.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Cotizador web ───────────────────────────────────────────────────────── -->
+<section class="section" id="cotizador">
+  <div class="inner">
+    <div class="eyebrow">E1 · El Cotizador</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:.03em;margin-bottom:8px;">
+      Cotizador web en tiempo real
+    </h2>
+    <p style="color:var(--muted);margin-bottom:40px;max-width:520px;">
+      El mismo motor de precios que usa el bot de WhatsApp — sin esperas, sin LLM, tarifa en segundos.
+    </p>
+    <div class="cotizador-wrap">
+      <!-- Form -->
+      <div class="cotizador-form">
+        <div class="form-title">Nueva cotización</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="origen">Origen</label>
+            <select id="origen">
+              <option value="Monterrey">Monterrey</option>
+              <option value="Guadalajara">Guadalajara</option>
+              <option value="CDMX">CDMX</option>
+              <option value="Laredo">Laredo</option>
+              <option value="Saltillo">Saltillo</option>
+              <option value="Querétaro">Querétaro</option>
+              <option value="Tijuana">Tijuana</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="destino">Destino</label>
+            <select id="destino">
+              <option value="Guadalajara">Guadalajara</option>
+              <option value="Monterrey">Monterrey</option>
+              <option value="CDMX">CDMX</option>
+              <option value="Laredo">Laredo</option>
+              <option value="Saltillo">Saltillo</option>
+              <option value="Tijuana">Tijuana</option>
+              <option value="Querétaro">Querétaro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tipo_unidad">Tipo de unidad</label>
+            <select id="tipo_unidad">
+              <option value="trailer">Trailer / Caja seca</option>
+              <option value="plataforma">Plataforma / Flatbed</option>
+              <option value="rabon">Rabón</option>
+              <option value="torton">Tortón</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="peso_ton">Peso (toneladas)</label>
+            <input type="number" id="peso_ton" value="10" min="0.5" max="30" step="0.5">
+          </div>
+          <div class="form-group full">
+            <label for="producto">Producto (opcional)</label>
+            <input type="text" id="producto" placeholder="ej. varilla, electrónica, alimento…">
+          </div>
+          <div class="form-group" style="flex-direction:row;align-items:center;gap:8px;">
+            <input type="checkbox" id="is_hazmat" style="width:auto;accent-color:var(--green);">
+            <label for="is_hazmat" style="text-transform:none;font-size:13px;color:var(--white);letter-spacing:0;">Material peligroso</label>
+          </div>
+          <div class="form-group" style="flex-direction:row;align-items:center;gap:8px;">
+            <input type="checkbox" id="is_refrigerated" style="width:auto;accent-color:var(--green);">
+            <label for="is_refrigerated" style="text-transform:none;font-size:13px;color:var(--white);letter-spacing:0;">Refrigerado</label>
+          </div>
+        </div>
+        <div class="form-footer">
+          <button class="btn-quote" onclick="calcularCotizacion()">
+            <span class="spinner" id="spinner"></span>
+            <span id="btn-text">Calcular precio</span>
+          </button>
+        </div>
+        <div class="error-msg" id="error-msg"></div>
+      </div>
+
+      <!-- Result -->
+      <div class="quote-result" id="quote-result">
+        <div class="quote-empty" id="quote-empty">
+          <div class="quote-empty-icon">📋</div>
+          <div style="font-size:14px;font-weight:500;">Tu cotización aparecerá aquí</div>
+          <div style="font-size:13px;color:var(--muted);">Llena el formulario y presiona Calcular</div>
+        </div>
+        <div id="quote-content" style="display:none;">
+          <div class="quote-folio" id="q-folio"></div>
+          <div class="quote-route" id="q-route"></div>
+          <div class="quote-lines" id="q-lines"></div>
+          <div class="q-total">
+            <div class="q-total-label">TOTAL MXN (con IVA)</div>
+            <div class="q-total-value" id="q-total"></div>
+          </div>
+          <div id="q-semaforo"></div>
+          <div class="fallback-note" id="q-fallback"></div>
+          <a href="#" target="_blank" class="btn-wa-confirm" id="q-wa-btn">
+            💬 Confirmar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Cómo funciona ───────────────────────────────────────────────────────── -->
+<section class="section section-dark" id="flujo">
+  <div class="inner">
+    <div class="eyebrow">Pipeline de cotización</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:.03em;margin-bottom:48px;">
+      Del mensaje a la confirmación en segundos
+    </h2>
+    <div class="flow-grid">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div class="flow-agent">Router</div>
+        <div class="flow-title">Clasificación</div>
+        <div class="flow-desc">El MessageRouter detecta la intención: cotizar, operador, seguimiento.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div class="flow-agent">E1 · NLU</div>
+        <div class="flow-title">Extracción</div>
+        <div class="flow-desc">Origen, destino, peso, producto y fechas extraídos con Claude.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div class="flow-agent">RateEngine</div>
+        <div class="flow-title">Tarificación</div>
+        <div class="flow-desc">9 pasos: flete base, seguro, maniobras, recargos, IVA y margen.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div class="flow-agent">E4 + E6</div>
+        <div class="flow-title">Semáforo</div>
+        <div class="flow-desc">E4 revisa el margen. E6 rankea los operadores disponibles.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">05</div>
+        <div class="flow-agent">E3 · Carta</div>
+        <div class="flow-title">Despacho</div>
+        <div class="flow-desc">Al confirmar, E3 genera y envía la carta de instrucciones al operador.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Agentes ─────────────────────────────────────────────────────────────── -->
+<section class="section" id="agentes">
+  <div class="inner">
+    <div class="eyebrow">Ecosistema · Capa 1</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:.03em;margin-bottom:40px;">
+      Los 9 agentes del motor operativo
+    </h2>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">📋</div>
+          <div>
+            <div class="agent-code">E1</div>
+            <div class="agent-name">El Cotizador</div>
+          </div>
+        </div>
+        <div class="agent-desc">Cotizaciones de flete vía WhatsApp. Extrae campos con NLU y calcula precio en 9 pasos.</div>
+        <div class="agent-status"><div class="dot dot-green"></div><span style="color:var(--green);">Activo en producción</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">🚛</div>
+          <div>
+            <div class="agent-code">E2</div>
+            <div class="agent-name">El Operador</div>
+          </div>
+        </div>
+        <div class="agent-desc">Registro conversacional de operadores y transportistas. Captura datos, unidad y disponibilidad.</div>
+        <div class="agent-status"><div class="dot dot-green"></div><span style="color:var(--green);">Activo en producción</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">📄</div>
+          <div>
+            <div class="agent-code">E3</div>
+            <div class="agent-name">El Documentador</div>
+          </div>
+        </div>
+        <div class="agent-desc">Genera la carta de instrucciones para el carrier al confirmar el viaje. PDF + WhatsApp text.</div>
+        <div class="agent-status"><div class="dot dot-green"></div><span style="color:var(--green);">Activo en producción</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">💰</div>
+          <div>
+            <div class="agent-code">E4</div>
+            <div class="agent-name">El Comisionista</div>
+          </div>
+        </div>
+        <div class="agent-desc">Semáforo de rentabilidad: VERDE / AMARILLO / NARANJA / ROJO. Protege el margen del broker.</div>
+        <div class="agent-status"><div class="dot dot-green"></div><span style="color:var(--green);">Activo en producción</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">📍</div>
+          <div>
+            <div class="agent-code">E5</div>
+            <div class="agent-name">El Seguimiento</div>
+          </div>
+        </div>
+        <div class="agent-desc">Responde preguntas de estado: ¿dónde va mi carga? Muestra la etapa actual del workflow.</div>
+        <div class="agent-status"><div class="dot dot-green"></div><span style="color:var(--green);">Activo en producción</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">🔍</div>
+          <div>
+            <div class="agent-code">E6</div>
+            <div class="agent-name">El Buscador</div>
+          </div>
+        </div>
+        <div class="agent-desc">Rankea operadores por tipo de unidad, zona, score y disponibilidad. Asigna al mejor perfil.</div>
+        <div class="agent-status"><div class="dot dot-green"></div><span style="color:var(--green);">Activo en producción</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">⭐</div>
+          <div>
+            <div class="agent-code">E7</div>
+            <div class="agent-name">El Evaluador</div>
+          </div>
+        </div>
+        <div class="agent-desc">Post-trip: califica al operador en puntualidad, documentación y condición de la unidad.</div>
+        <div class="agent-status"><div class="dot dot-blue"></div><span style="color:var(--blue);">En desarrollo</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">📊</div>
+          <div>
+            <div class="agent-code">E8</div>
+            <div class="agent-name">El Reportero</div>
+          </div>
+        </div>
+        <div class="agent-desc">Reporte diario de cotizaciones, ingresos y operadores. Disponible vía WhatsApp o API.</div>
+        <div class="agent-status"><div class="dot dot-green"></div><span style="color:var(--green);">Activo en producción</span></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">🧠</div>
+          <div>
+            <div class="agent-code">E9</div>
+            <div class="agent-name">El Supervisor</div>
+          </div>
+        </div>
+        <div class="agent-desc">Orquesta el pipeline completo. Autoriza cotizaciones en semáforo rojo y resuelve conflictos.</div>
+        <div class="agent-status"><div class="dot dot-blue"></div><span style="color:var(--blue);">En desarrollo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-brand">AB<span>Storage</span> · Motor Operativo IA</div>
+  <div class="footer-note">Powered by <a href="https://vortexagents.ai" style="color:var(--green);text-decoration:none;">Vortex AI Agents</a></div>
+  <div class="footer-links">
+    <a href="https://vortexagents.ai">vortexagents.ai</a>
+    <a href="https://wa.me/15282609614">WhatsApp</a>
+    <a href="https://api.vortexagents.ai/docs" target="_blank">API Docs</a>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.vortexagents.ai';
+
+  // ── Copy number ────────────────────────────────────────────────────────────
+  function copyNumber() {
+    navigator.clipboard.writeText('+15282609614').then(() => {
+      alert('Número copiado: +1 528 260 9614');
+    });
+  }
+
+  // ── Load video ─────────────────────────────────────────────────────────────
+  function loadVideo(thumb) {
+    const card = thumb.closest('.video-card');
+    const ytId = card.dataset.yt;
+    if (!ytId) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+    iframe.allow = 'autoplay; encrypted-media';
+    iframe.allowFullscreen = true;
+    thumb.innerHTML = '';
+    thumb.appendChild(iframe);
+  }
+
+  // ── Cotizador ──────────────────────────────────────────────────────────────
+  async function calcularCotizacion() {
+    const btn  = document.querySelector('.btn-quote');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btn-text');
+    const errEl  = document.getElementById('error-msg');
+
+    const origen       = document.getElementById('origen').value;
+    const destino      = document.getElementById('destino').value;
+    const tipo_unidad  = document.getElementById('tipo_unidad').value;
+    const peso_ton     = parseFloat(document.getElementById('peso_ton').value);
+    const producto     = document.getElementById('producto').value;
+    const is_hazmat    = document.getElementById('is_hazmat').checked;
+    const is_refrigerated = document.getElementById('is_refrigerated').checked;
+
+    if (origen === destino) {
+      showError('Origen y destino no pueden ser iguales.');
+      return;
+    }
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    btnText.textContent = 'Calculando…';
+    errEl.style.display = 'none';
+
+    try {
+      const resp = await fetch(`${API_BASE}/api/v1/freight/rate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origen, destino, tipo_unidad, peso_ton, producto, is_hazmat, is_refrigerated })
+      });
+
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      showResult(data);
+    } catch(e) {
+      showError('No se pudo conectar con el servidor. Verifica tu conexión.');
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.textContent = 'Calcular precio';
+    }
+  }
+
+  function showError(msg) {
+    const errEl = document.getElementById('error-msg');
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  }
+
+  function fmt(n) {
+    return new Intl.NumberFormat('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+  }
+
+  function showResult(d) {
+    const result = document.getElementById('quote-result');
+    const empty  = document.getElementById('quote-empty');
+    const content= document.getElementById('quote-content');
+
+    // Folio
+    const ts = Date.now().toString(16).toUpperCase().slice(-6);
+    document.getElementById('q-folio').textContent = `COTIZACIÓN WEB-${ts}`;
+
+    // Route
+    document.getElementById('q-route').innerHTML =
+      `${d.origen} <span>→</span> ${d.destino}`;
+
+    // Lines
+    const lines = [
+      { label: `🚛 Unidad: ${d.tipo_unidad}`, value: null },
+      { label: `⚖️ Peso: ${d.peso_ton} ton`, value: null },
+      null, // divider
+      { label: '💰 Flete base', value: `$${fmt(d.flete_base)} MXN${d.used_fallback_rate ? ' *(estimado)*' : ''}` },
+      d.seguro > 0 ? { label: '🛡️ Seguro', value: `$${fmt(d.seguro)} MXN` } : null,
+      null,
+      { label: '📊 Subtotal', value: `$${fmt(d.subtotal)} MXN` },
+      { label: '🧾 IVA 16%', value: `$${fmt(d.iva)} MXN` },
+    ].filter(x => x !== undefined);
+
+    const linesEl = document.getElementById('q-lines');
+    linesEl.innerHTML = lines.map(l => {
+      if (l === null) return `<div class="q-divider"></div>`;
+      if (!l.value) return `<div class="q-line"><span class="q-line-label">${l.label}</span></div>`;
+      return `<div class="q-line"><span class="q-line-label">${l.label}</span><span class="q-line-value">${l.value}</span></div>`;
+    }).join('');
+
+    document.getElementById('q-total').textContent = `$${fmt(d.total)}`;
+
+    // Semaforo
+    const semEl = document.getElementById('q-semaforo');
+    const dots = { VERDE:'🟢', AMARILLO:'🟡', NARANJA:'🟠', ROJO:'🔴', CRITICO:'🔴' };
+    semEl.innerHTML = `<div class="semaforo sem-${d.semaforo}">${dots[d.semaforo]||'●'} Semáforo: ${d.semaforo}</div>`;
+
+    // Fallback note
+    const fallbackEl = document.getElementById('q-fallback');
+    fallbackEl.textContent = d.used_fallback_rate
+      ? '* Tarifa estimada — esta ruta no está en tabla. Confirma por WhatsApp para precio exacto.'
+      : '';
+
+    // WA button
+    const msg = encodeURIComponent(
+      `Hola, quiero confirmar una cotización:\n` +
+      `Ruta: ${d.origen} → ${d.destino}\n` +
+      `Unidad: ${d.tipo_unidad}, ${d.peso_ton} ton\n` +
+      `Total estimado: $${fmt(d.total)} MXN`
+    );
+    document.getElementById('q-wa-btn').href = `https://wa.me/15282609614?text=${msg}`;
+
+    empty.style.display = 'none';
+    content.style.display = 'block';
+    result.classList.add('visible');
+  }
+
+  // Make result always visible on load (for layout)
+  document.getElementById('quote-result').style.opacity = '1';
+  document.getElementById('quote-result').style.transform = 'none';
+  document.getElementById('quote-result').style.pointerEvents = 'all';
+</script>
+</body>
+</html>
