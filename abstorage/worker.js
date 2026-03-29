@@ -21,6 +21,8 @@ export default {
     // If root path, serve /abstorage/
     if (url.pathname === '/' || url.pathname === '') {
       upstream.pathname = '/abstorage/';
+    } else if (url.pathname.startsWith('/mercado')) {
+      // Pass /mercado/* through unchanged
     } else if (!url.pathname.startsWith('/abstorage')) {
       upstream.pathname = '/abstorage' + url.pathname;
     }

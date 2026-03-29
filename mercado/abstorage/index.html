@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ABStorage · Vortex AI Agents</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --bg:    #f6f2ec;
+  --bg2:   #ede8e0;
+  --bg3:   #e5dfd5;
+  --white: #fdfcfa;
+  --panel: #ffffff;
+  --bdr:   #dbd4c8;
+  --bdr2:  #ccc3b4;
+  --ink:   #18120c;
+  --ink2:  #3d3020;
+  --ink3:  #7a6a55;
+  --ink4:  #b0a090;
+  --ink5:  #d5cdc0;
+
+  --c1: #1a5c3a; --d1: rgba(26,92,58,.08);   /* SEO — forest green   */
+  --c2: #1a3d6b; --d2: rgba(26,61,107,.08);  /* Lead — deep navy     */
+  --c3: #6b2a1a; --d3: rgba(107,42,26,.08);  /* Appt — terracotta    */
+  --c4: #5c1a3a; --d4: rgba(92,26,58,.08);   /* Review — deep rose   */
+  --c5: #3a1a6b; --d5: rgba(58,26,107,.08);  /* Follow — indigo      */
+  --c6: #1a5060; --d6: rgba(26,80,96,.08);   /* FAQ — teal           */
+  --c7: #4a3a1a; --d7: rgba(74,58,26,.08);   /* Widget — umber       */
+
+  --serif: 'Playfair Display', serif;
+  --sans:  'DM Sans', sans-serif;
+  --mono:  'DM Mono', monospace;
+}
+
+html, body { height:100%; overflow:hidden; background:#e0d8cc; font-family:var(--sans); color:var(--ink); }
+
+/* ── PHONE ── */
+.phone {
+  width:100%; height:100%; max-width:390px; margin:0 auto;
+  display:flex; flex-direction:column;
+  background:var(--bg); position:relative; overflow:hidden;
+  box-shadow: 0 0 60px rgba(0,0,0,.3);
+}
+
+/* ── STATUS BAR ── */
+.sbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 16px 4px; background:var(--white);
+  border-bottom:1px solid var(--bdr); flex-shrink:0;
+  font-family:var(--mono); font-size:10px; color:var(--ink4);
+}
+.sbar-t { font-size:11px; font-weight:500; color:var(--ink2); }
+.sbar-brand { font-family:var(--serif); font-size:12px; font-weight:700; color:var(--ink2); letter-spacing:-.01em; }
+
+/* ── APPBAR ── */
+.appbar {
+  background:var(--white); border-bottom:1px solid var(--bdr);
+  padding:9px 14px 10px; flex-shrink:0;
+}
+.appbar-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.logo { display:flex; align-items:center; gap:9px; }
+.logo-mark {
+  width:30px; height:30px; border-radius:8px;
+  background:var(--ink); color:var(--white);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--serif); font-size:10px; font-weight:700; letter-spacing:-.01em;
+}
+.logo-name { font-family:var(--serif); font-weight:700; font-size:15px; color:var(--ink); }
+.logo-sub  { font-family:var(--mono); font-size:8px; color:var(--ink4); margin-top:1px; }
+.live-pill {
+  display:flex; align-items:center; gap:5px;
+  background:var(--bg2); border:1px solid var(--bdr);
+  border-radius:20px; padding:3px 10px;
+  font-family:var(--mono); font-size:9px; color:var(--ink3);
+}
+.ldot { width:5px; height:5px; border-radius:50%; background:var(--c1); animation:ld 1.8s ease-in-out infinite; }
+@keyframes ld { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+/* Progress */
+.prog { display:flex; gap:3px; margin-bottom:7px; }
+.pseg {
+  flex:1; height:2px; border-radius:2px;
+  background:var(--bdr2); overflow:hidden; position:relative;
+}
+.pfill { position:absolute; left:0; top:0; height:100%; width:0; border-radius:2px; }
+.pseg.done .pfill { width:100%; }
+.pseg.active .pfill { animation:pf var(--d,10s) linear forwards; }
+@keyframes pf { to { width:100%; } }
+
+/* Agent chips */
+.chips { display:flex; gap:5px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
+.chips::-webkit-scrollbar { display:none; }
+.chip {
+  display:flex; align-items:center; gap:4px;
+  padding:3px 9px; border-radius:20px;
+  font-family:var(--mono); font-size:8px;
+  border:1px solid var(--bdr); background:var(--bg);
+  color:var(--ink4); white-space:nowrap; flex-shrink:0;
+  cursor:pointer; transition:all .25s;
+}
+.chip.active {
+  border-color:var(--ac); color:var(--ac);
+  background:color-mix(in srgb, var(--ac) 8%, white);
+}
+.chipdot { width:4px; height:4px; border-radius:50%; background:var(--ac); }
+
+/* ── SCENE WRAP ── */
+.scene-wrap { flex:1; min-height:0; position:relative; overflow:hidden; }
+
+/* ── CINEMATIC OVERLAY ── */
+.cin {
+  position:absolute; inset:0; z-index:200;
+  background:var(--white);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; padding:28px 24px;
+  opacity:0; pointer-events:none; transition:opacity .35s;
+}
+.cin.show { opacity:1; pointer-events:all; }
+.cin-num {
+  font-family:var(--mono); font-size:9px; color:var(--ink4);
+  letter-spacing:.15em; text-transform:uppercase;
+}
+.cin-line { width:36px; height:1px; background:var(--bdr2); }
+.cin-name {
+  font-family:var(--serif); font-size:26px; font-weight:900;
+  color:var(--ink); letter-spacing:-.02em; text-align:center; line-height:1.1;
+}
+.cin-desc {
+  font-size:11.5px; color:var(--ink3); text-align:center;
+  line-height:1.65; max-width:270px;
+}
+.cin-pain {
+  font-family:var(--mono); font-size:10px; color:var(--ink3);
+  border-left:2px solid var(--ink4); padding:6px 0 6px 12px;
+  max-width:280px; line-height:1.6; font-style:italic;
+  margin-top:4px;
+}
+
+/* ── SCENES ── */
+.scene {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  opacity:0; transform:translateX(14px);
+  pointer-events:none; transition:opacity .4s ease, transform .4s ease;
+}
+.scene.on { opacity:1; transform:translateX(0); pointer-events:all; }
+
+/* Scene header */
+.shdr {
+  padding:10px 14px 9px; border-bottom:1px solid var(--bdr);
+  background:var(--white); flex-shrink:0;
+  display:flex; align-items:center; gap:9px;
+}
+.shdr-av {
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--sans); font-size:12px; font-weight:600;
+  border:2px solid var(--bdr);
+}
+.shdr-name { font-family:var(--sans); font-weight:600; font-size:13px; color:var(--ink); }
+.shdr-sub  { font-size:10px; color:var(--ink4); font-family:var(--mono); }
+.shdr-tag  {
+  margin-left:auto; font-family:var(--mono); font-size:8.5px; color:var(--ink4);
+  background:var(--bg2); border:1px solid var(--bdr);
+  border-radius:20px; padding:2px 8px; white-space:nowrap; flex-shrink:0;
+}
+
+/* Pain banner */
+.pain-banner {
+  padding:6px 14px; border-bottom:1px solid var(--bdr);
+  background:var(--bg); flex-shrink:0;
+  display:flex; align-items:center; gap:7px;
+  font-family:var(--mono); font-size:9px; color:var(--ink3);
+}
+.pbdot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+
+/* Messages */
+.msgs {
+  flex:1; overflow-y:auto; padding:11px 12px 8px;
+  display:flex; flex-direction:column; gap:8px; scrollbar-width:none;
+}
+.msgs::-webkit-scrollbar { display:none; }
+
+.msg { display:flex; gap:7px; opacity:0; transform:translateY(5px); animation:mup .32s ease forwards; }
+@keyframes mup { to { opacity:1; transform:translateY(0); } }
+.msg.r { flex-direction:row-reverse; }
+
+.mav {
+  width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:600; font-family:var(--sans);
+  border:1.5px solid var(--bdr); flex-shrink:0; margin-top:1px;
+}
+.mcont { max-width:80%; display:flex; flex-direction:column; gap:3px; }
+.msg.r .mcont { align-items:flex-end; }
+.msend { font-family:var(--mono); font-size:8px; color:var(--ink5); padding:0 2px; }
+
+.mb {
+  padding:8px 12px; border-radius:12px;
+  font-size:12.5px; line-height:1.55; border:1px solid var(--bdr);
+}
+.msg.r .mb { background:var(--ink); color:#f0ece6; border-radius:12px 2px 12px 12px; border-color:var(--ink); }
+.msg.l .mb { border-radius:2px 12px 12px 12px; background:var(--white); }
+
+.sys-note {
+  text-align:center; font-family:var(--mono); font-size:9px;
+  color:var(--ink4); background:var(--bg2); border:1px solid var(--bdr);
+  border-radius:6px; padding:4px 10px; width:100%;
+}
+.pill {
+  display:inline-flex; align-items:center; gap:3px;
+  padding:2px 8px; border-radius:20px;
+  font-size:8.5px; font-family:var(--mono); border:1px solid;
+}
+
+/* Card */
+.card {
+  background:var(--bg); border:1px solid var(--bdr);
+  border-radius:10px; padding:9px 11px;
+}
+.card-title { font-family:var(--sans); font-weight:700; font-size:11px; margin-bottom:6px; }
+.card-row {
+  display:flex; justify-content:space-between;
+  padding:3px 0; border-bottom:1px solid var(--bdr); font-size:10px;
+}
+.card-row:last-child { border-bottom:none; }
+.card-k { color:var(--ink4); font-family:var(--mono); font-size:9px; }
+.card-v { color:var(--ink); font-weight:500; }
+.card-v.hi { font-weight:700; }
+
+/* Review card */
+.rev-card { background:var(--bg); border:1px solid var(--bdr); border-radius:10px; padding:9px 11px; }
+.rev-stars { font-size:13px; margin-bottom:4px; }
+.rev-text  { font-size:11px; color:var(--ink3); line-height:1.5; font-style:italic; margin-bottom:4px; }
+.rev-auth  { font-family:var(--mono); font-size:8px; color:var(--ink4); }
+
+/* SEO body */
+.seo-body {
+  flex:1; overflow-y:auto; padding:11px 12px 8px;
+  display:flex; flex-direction:column; gap:8px; scrollbar-width:none;
+}
+.seo-body::-webkit-scrollbar { display:none; }
+.seo-card {
+  background:var(--white); border:1px solid var(--bdr);
+  border-radius:10px; padding:10px 12px;
+  opacity:0; animation:mup .4s ease forwards;
+}
+.sc-lbl { font-family:var(--mono); font-size:8px; color:var(--ink4); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+
+.kw-row {
+  display:flex; align-items:center; gap:6px;
+  padding:4px 0; border-bottom:1px solid var(--bdr); font-size:10.5px;
+}
+.kw-row:last-child { border-bottom:none; }
+.kw-t  { flex:1; color:var(--ink2); font-size:10px; line-height:1.3; }
+.kw-bar { width:44px; height:3px; background:var(--bdr2); border-radius:2px; overflow:hidden; }
+.kw-fill { height:100%; border-radius:2px; width:0; transition:width 1.3s ease; }
+.kw-pos { font-family:var(--mono); font-size:11px; font-weight:500; min-width:22px; text-align:right; }
+
+.ai-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:5px 0; border-bottom:1px solid var(--bdr);
+}
+.ai-row:last-child { border-bottom:none; }
+.ai-name { font-family:var(--mono); font-size:10px; color:var(--ink2); }
+.ai-n    { font-family:var(--serif); font-size:18px; font-weight:900; }
+.ai-d    { font-family:var(--mono); font-size:9px; }
+
+.gbp-post {
+  background:var(--bg); border:1px solid var(--bdr);
+  border-left:3px solid var(--c1); border-radius:8px;
+  padding:9px 11px; font-size:12px; line-height:1.7; color:var(--ink2);
+}
+.gbp-kw { font-weight:700; color:var(--c1); }
+.gbp-meta { font-family:var(--mono); font-size:8px; color:var(--ink4); margin-bottom:6px; }
+
+/* Typing */
+.typing-mb {
+  display:flex; align-items:center; gap:5px;
+  padding:8px 12px; border-radius:2px 12px 12px 12px;
+  background:var(--white); border:1px solid var(--bdr);
+  font-size:9px; color:var(--ink4); font-family:var(--mono);
+}
+.typing span {
+  width:4px; height:4px; border-radius:50%;
+  background:var(--ink5); display:inline-block; animation:td .9s ease infinite;
+}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes td { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-4px)} }
+
+/* ── FINAL SUMMARY SCREEN ── */
+.summary-scene {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  opacity:0; transform:translateY(14px);
+  pointer-events:none; transition:opacity .5s ease, transform .5s ease;
+  background:var(--white);
+}
+.summary-scene.on { opacity:1; transform:translateY(0); pointer-events:all; }
+
+.sum-header {
+  padding:16px 16px 12px; border-bottom:1px solid var(--bdr);
+  flex-shrink:0;
+}
+.sum-eyebrow { font-family:var(--mono); font-size:9px; color:var(--ink4); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; }
+.sum-title { font-family:var(--serif); font-size:22px; font-weight:900; color:var(--ink); line-height:1.1; margin-bottom:4px; }
+.sum-sub { font-size:11px; color:var(--ink3); line-height:1.5; }
+
+.sum-body { flex:1; overflow-y:auto; padding:10px 12px 12px; scrollbar-width:none; display:flex; flex-direction:column; gap:8px; }
+.sum-body::-webkit-scrollbar { display:none; }
+
+.sum-agent {
+  background:var(--bg); border:1px solid var(--bdr);
+  border-radius:10px; padding:10px 12px;
+  display:flex; align-items:flex-start; gap:10px;
+  opacity:0; animation:mup .4s ease forwards;
+}
+.sum-agent-icon {
+  width:34px; height:34px; border-radius:9px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+  border:1px solid var(--bdr);
+}
+.sum-agent-body { flex:1; min-width:0; }
+.sum-agent-name { font-family:var(--sans); font-weight:700; font-size:12px; color:var(--ink); margin-bottom:2px; }
+.sum-agent-desc { font-size:10.5px; color:var(--ink3); line-height:1.4; }
+.sum-stat {
+  font-family:var(--mono); font-size:9px; margin-top:4px;
+  padding:2px 7px; border-radius:20px; display:inline-flex;
+  align-items:center; gap:4px; border:1px solid;
+}
+
+/* CTA footer */
+.sum-cta {
+  flex-shrink:0; padding:12px 14px 14px;
+  border-top:1px solid var(--bdr); background:var(--white);
+}
+.cta-line { font-family:var(--serif); font-size:15px; font-weight:700; color:var(--ink); margin-bottom:8px; text-align:center; line-height:1.3; }
+.cta-row { display:flex; gap:8px; }
+.cta-btn {
+  flex:1; padding:11px 8px; border-radius:10px; text-align:center;
+  font-family:var(--sans); font-size:12px; font-weight:600; cursor:pointer;
+  border:1px solid var(--bdr); transition:all .2s;
+}
+.cta-btn.primary { background:var(--ink); color:var(--white); border-color:var(--ink); }
+.cta-btn.secondary { background:var(--bg); color:var(--ink3); }
+
+/* ── BOTTOM NAV ── */
+.bnav {
+  background:var(--white); border-top:1px solid var(--bdr);
+  display:grid; grid-template-columns:repeat(8,1fr);
+  flex-shrink:0; padding-bottom:env(safe-area-inset-bottom, 4px);
+}
+.bnav-btn {
+  display:flex; flex-direction:column; align-items:center;
+  padding:6px 2px 4px; cursor:pointer; transition:all .2s;
+  border-top:2px solid transparent; gap:2px;
+}
+.bnav-btn.active { border-top-color:var(--bc); }
+.bnav-icon { font-size:14px; line-height:1; }
+.bnav-lbl  { font-family:var(--mono); font-size:6px; color:var(--ink4); text-align:center; line-height:1.2; }
+.bnav-btn.active .bnav-lbl { color:var(--bc); }
+
+/* Tap overlay */
+.tap-area { position:absolute; inset:0; z-index:50; cursor:pointer; }
+.pause-badge {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:rgba(248,244,238,.85); border:1px solid var(--bdr);
+  border-radius:50%; width:52px; height:52px;
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+  opacity:0; pointer-events:none; transition:opacity .2s;
+  backdrop-filter:blur(6px);
+}
+.pause-badge.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="sbar">
+    <span class="sbar-t" id="clockEl">9:14</span>
+    <span class="sbar-brand">ABStorage</span>
+    <span class="sbar-r" style="font-size:11px;color:var(--ink4)">📶 🔋</span>
+  </div>
+
+  <!-- APPBAR -->
+  <div class="appbar">
+    <div class="appbar-top">
+      <div class="logo">
+        <div class="logo-mark">AB</div>
+        <div>
+          <div class="logo-name">ABStorage</div>
+          <div class="logo-sub">Powered by Vortex AI Agents</div>
+        </div>
+      </div>
+      <div class="live-pill"><div class="ldot"></div>Demo en vivo</div>
+    </div>
+    <div class="prog" id="prog"></div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <!-- SCENE WRAP -->
+  <div class="scene-wrap" id="wrap">
+
+    <!-- Cinematic overlay -->
+    <div class="cin" id="cin">
+      <div class="cin-num" id="cin-num">Agente 01 · 07</div>
+      <div class="cin-line"></div>
+      <div class="cin-name" id="cin-name">SEO Posicionador</div>
+      <div class="cin-desc" id="cin-desc">Visibilidad orgánica en Google y motores de IA</div>
+      <div class="cin-pain" id="cin-pain">"Si no te encuentran, no existes."</div>
+    </div>
+
+    <!-- Tap overlay -->
+    <div class="tap-area" id="tapArea">
+      <div class="pause-badge" id="pauseBadge">▶</div>
+    </div>
+
+    <!-- Scenes injected by JS -->
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav" id="bnav"></div>
+
+</div>
+
+<script>
+// ── AGENT DATA ────────────────────────────────────────────────────────────────
+
+const AG = [
+  {
+    id:0, icon:'📈', nav:'SEO', ecod:'E9 · VISIBILIDAD',
+    color:'var(--c1)', hex:'#1a5c3a', dim:'var(--d1)',
+    cinName:'E9 · El Posicionador',
+    cinDesc:'Genera visibilidad en Google, Maps, ChatGPT y Perplexity — sin pagar anuncios.',
+    cinPain:'"Mis clientes buscan fletes en Google. Si ABStorage no aparece en los primeros lugares, la llamada se la lleva otro."',
+    pain:'🔍 Sin SEO, los clientes que buscan en Google se van con la competencia',
+    painColor:'var(--c1)',
+    dur:11000, type:'seo',
+    hdr:{ av:{t:'E9',bg:'rgba(26,92,58,.1)',cl:'var(--c1)'}, name:'E9 El Posicionador', sub:'Generando visibilidad · automático', tag:'🌐 SEO + AI Search' },
+  },
+  {
+    id:1, icon:'🎧', nav:'Lead', ecod:'LEAD RESPONSE',
+    color:'var(--c2)', hex:'#1a3d6b', dim:'var(--d2)',
+    cinName:'Lead Response',
+    cinDesc:'Responde a cada shipper que escribe — en menos de 2 segundos, a cualquier hora.',
+    cinPain:'"Son las 9pm y un cliente escribió por WhatsApp. Nadie contestó. Mañana ya contrató a otro broker."',
+    pain:'⏰ Leads que llegan de noche o fin de semana se pierden sin respuesta',
+    painColor:'var(--c2)',
+    dur:18000, type:'chat',
+    hdr:{ av:{t:'MV',bg:'rgba(26,61,107,.1)',cl:'var(--c2)'}, name:'Miguel Vargas — Shipper', sub:'Prospecto nuevo · llegó vía Google · 9:47 PM', tag:'📲 WhatsApp' },
+    msgs:[
+      {r:'u', text:'Buenas, busqué "broker de carga Guadalajara" en Google y salieron. Necesito mover carga seca GDL–MTY esta semana, ¿trabajan con empresas?'},
+      {r:'a', label:'Lead Response · ABStorage', text:'¡Buenas Miguel! Claro que sí, trabajamos con empresas 🤝\n\n¿Cuántas toneladas aproximado y para qué fecha lo necesitas?', pill:'⚡ 1.6 seg · 9:47 PM · español detectado'},
+      {r:'u', text:'8 toneladas, caja seca. Para el viernes.'},
+      {r:'a', label:'Lead Response · ABStorage', text:'Perfecto. ¿Requieres carta porte 2.0? Y dime el nombre de tu empresa para generar la cotización.'},
+      {r:'u', text:'Sí, con carta porte. Empresa: Comercializadora Vargas SA de CV.'},
+      {r:'a', label:'Lead Response · ABStorage', card:{
+        ac:'var(--c2)',
+        title:'💼 Cotización GDL–MTY · Caja Seca',
+        rows:[
+          {k:'Cliente',    v:'Comercializadora Vargas SA'},
+          {k:'Ruta',       v:'GDL → MTY · ~650 km'},
+          {k:'Carga',      v:'8 ton · caja seca'},
+          {k:'Carta Porte',v:'2.0 incluida'},
+          {k:'Fecha',      v:'Viernes · entrega garantizada'},
+          {k:'Tarifa est.', v:'$9,200 MXN + IVA', hi:true},
+        ]
+      }, pill:'✅ Cotización enviada · ops@abstorage.mx · 9:48 PM'},
+    ]
+  },
+  {
+    id:2, icon:'📅', nav:'Agenda', ecod:'APPOINTMENT SCHEDULER',
+    color:'var(--c3)', hex:'#6b2a1a', dim:'var(--d3)',
+    cinName:'Appointment Scheduler',
+    cinDesc:'Agenda visitas y llamadas de diagnóstico 24/7, sin doble-agenda ni coordinación manual.',
+    cinPain:'"Hay clientes que quieren una visita antes de contratar. Si no les respondo rápido, se enfrían y no llaman de regreso."',
+    pain:'📞 Prospectos que quieren agendar se pierden si no hay respuesta inmediata',
+    painColor:'var(--c3)',
+    dur:14000, type:'chat',
+    hdr:{ av:{t:'LR',bg:'rgba(107,42,26,.1)',cl:'var(--c3)'}, name:'Laura Ríos — Ops Manager', sub:'Agendando visita de diagnóstico', tag:'📲 WhatsApp' },
+    msgs:[
+      {r:'u', text:'Hola, quisiera que alguien de ABStorage venga a ver nuestro almacén antes de contratar el servicio. ¿Tienen disponibilidad esta semana?'},
+      {r:'a', label:'Appointment Scheduler', text:'¡Hola Laura! Hacemos visitas de diagnóstico sin costo 👋\n\nDisponibilidad esta semana:\n• Miércoles 19 · 10am ó 3pm\n• Jueves 20 · 9am ó 2pm\n\n¿Cuál te funciona?', pill:'📅 Calendario real · sin coordinación manual'},
+      {r:'u', text:'El miércoles a las 10 está perfecto.'},
+      {r:'a', label:'Appointment Scheduler', card:{
+        ac:'var(--c3)',
+        title:'📋 Visita Confirmada',
+        rows:[
+          {k:'Folio',    v:'VX-DX-0319'},
+          {k:'Contacto', v:'Laura Ríos'},
+          {k:'Servicio',  v:'Diagnóstico de fletes'},
+          {k:'Fecha',    v:'Miércoles 19 · 10:00 AM'},
+          {k:'Lugar',    v:'Tu almacén en GDL'},
+          {k:'Costo',    v:'Sin cargo', hi:true},
+        ]
+      }, pill:'✅ Recordatorio automático el martes a las 9 AM'},
+    ]
+  },
+  {
+    id:3, icon:'⭐', nav:'Reviews', ecod:'REVIEW RESPONSE',
+    color:'var(--c4)', hex:'#5c1a3a', dim:'var(--d4)',
+    cinName:'Review Response',
+    cinDesc:'Responde cada reseña de Google — empático en negativas, cálido en positivas. Nunca genérico.',
+    cinPain:'"Tengo 3 reseñas de 2 estrellas sin respuesta desde hace meses. Cualquier shipper que las ve, no llama."',
+    pain:'⭐ Reseñas negativas sin respuesta alejan a clientes potenciales',
+    painColor:'var(--c4)',
+    dur:11000, type:'chat',
+    hdr:{ av:{t:'G',bg:'rgba(92,26,58,.1)',cl:'var(--c4)'}, name:'Google Reviews · ABStorage', sub:'Nueva reseña · 2 estrellas · hace 22 min', tag:'⭐ Google Business' },
+    msgs:[
+      {r:'sys', text:'⚠️ Review Response detectó: 2 estrellas · hace 22 min'},
+      {r:'rev', stars:'⭐⭐', text:'"Contraté a ABStorage para un flete GDL–MTY y el camión llegó 3 horas tarde sin ningún aviso. Perdí mi cita en el almacén de destino. No recomendado."', auth:'— Carlos Mendoza · hace 22 min'},
+      {r:'a', label:'Review Response (borrador → aprobación)', text:'Hola Carlos, lamentamos mucho lo ocurrido. Una demora sin aviso no es nuestro estándar y perder una cita en destino tiene un costo real para tu operación.\n\nYa revisamos el caso con el operador. Por favor escríbenos a ops@abstorage.mx — queremos hacerte una compensación.', pill:'⏳ Enviado al dueño · reseñas 1-2 ★ requieren aprobación'},
+      {r:'sys', text:'✅ Rafael aprobó · Publicada en Google · 41 min desde la reseña'},
+    ]
+  },
+  {
+    id:4, icon:'🔁', nav:'Follow', ecod:'FOLLOW-UP SEQUENCE',
+    color:'var(--c5)', hex:'#3a1a6b', dim:'var(--d5)',
+    cinName:'Follow-Up Sequence',
+    cinDesc:'4 mensajes automáticos post-viaje que reenganchan clientes que se habían ido.',
+    cinPain:'"Tenemos clientes que hicieron 1 viaje hace 3 meses y nunca volvieron. Nadie los llamó. Ese dinero está dormido."',
+    pain:'💤 Clientes que hicieron un viaje y nunca regresaron — nadie los siguió',
+    painColor:'var(--c5)',
+    dur:19000, type:'chat',
+    hdr:{ av:{t:'AN',bg:'rgba(58,26,107,.1)',cl:'var(--c5)'}, name:'Adriana Núñez — Cliente activo', sub:'Post-viaje · GDL→MTY · completado ayer', tag:'📲 WhatsApp' },
+    msgs:[
+      {r:'sys', text:'D+1 · Trigger automático: viaje VX-0901 completado'},
+      {r:'a', label:'Follow-Up · Día 1', text:'¡Hola Adriana! Tu carga llegó a Monterrey sin novedad ayer 🙌\n¿Todo llegó en orden? Si hay algo que revisar, dinos.', pill:'D+1 · Confirmación de entrega'},
+      {r:'u', text:'Sí, todo perfecto. El chofer muy amable y puntual.'},
+      {r:'sys', text:'D+3 · NPS Automático'},
+      {r:'a', label:'Follow-Up · Día 3', text:'¡Qué bueno! Del 1 al 10, ¿cómo calificarías el servicio? Tu opinión nos ayuda a mejorar 🙏', pill:'D+3 · NPS · respuestas usadas para reviews'},
+      {r:'u', text:'10 sin duda, muy puntuales y profesionales.'},
+      {r:'sys', text:'D+7 · Solicitud de reseña Google'},
+      {r:'a', label:'Follow-Up · Día 7', text:'¡Gracias Adriana! 😊 Con ese 10 nos harías un favor enorme dejando eso en Google — son 30 segundos.\n\n👉 g.page/abstorage', pill:'D+7 · Review request → 23% tasa de conversión'},
+      {r:'sys', text:'D+30 · Reenganche automático'},
+      {r:'a', label:'Follow-Up · Día 30', text:'Adriana, ya pasó un mes desde tu último envío. ¿Tienes carga esta semana? Te cotizamos con prioridad. 🚛', pill:'D+30 · +18% clientes que regresan'},
+    ]
+  },
+  {
+    id:5, icon:'📋', nav:'FAQ', ecod:'FAQ AGENT',
+    color:'var(--c6)', hex:'#1a5060', dim:'var(--d6)',
+    cinName:'FAQ Agent',
+    cinDesc:'Responde preguntas operativas desde la base de conocimiento de ABStorage. 3 oraciones máximo. Si no sabe, escala.',
+    cinPain:'"Mi equipo pasa horas respondiendo las mismas preguntas: documentos, rutas, precios base, tiempos. Eso tiene costo."',
+    pain:'📞 Horas del equipo perdidas respondiendo siempre las mismas preguntas',
+    painColor:'var(--c6)',
+    dur:15000, type:'chat',
+    hdr:{ av:{t:'RP',bg:'rgba(26,80,96,.1)',cl:'var(--c6)'}, name:'Roberto Palma — Carrier', sub:'Consulta operativa · base de conocimiento', tag:'💬 Chat web' },
+    msgs:[
+      {r:'u', text:'Hola, ¿qué documentos necesito para registrarme como transportista con ABStorage?'},
+      {r:'a', label:'FAQ Agent · ABStorage', text:'Hola Roberto. Para darte de alta necesitas: licencia federal vigente, tarjeta de circulación, seguro RC mínimo $500K, permisos SCT vigentes y constancia fiscal. ¿Los tienes todos?', pill:'📋 Base de conocimiento · 1.9 seg'},
+      {r:'u', text:'Sí, todos. ¿Cuánto tarda el proceso?'},
+      {r:'a', label:'FAQ Agent · ABStorage', text:'24 a 48 horas hábiles. Envía los docs a carriers@abstorage.mx y te confirmamos aquí mismo.'},
+      {r:'u', text:'¿Y cuánto pagan normalmente por ruta?'},
+      {r:'a', label:'FAQ Agent · ABStorage', text:'Los rates varían por ruta y disponibilidad — te conecto con un operador que te da números reales para tu zona específica.', pill:'→ FAQ no adivina precios · escala a humano'},
+      {r:'sys', text:'✅ Escalado a Ops · Roberto recibirá contacto en < 30 min · 0 intervención manual'},
+    ]
+  },
+  {
+    id:6, icon:'💠', nav:'Widget', ecod:'CHAT WIDGET · EN+ES',
+    color:'var(--c7)', hex:'#4a3a1a', dim:'var(--d7)',
+    cinName:'Chat Widget · EN + ES',
+    cinDesc:'Punto de entrada único en tu sitio web. Detecta idioma e intención, rutea al agente correcto en 1 segundo.',
+    cinPain:'"Entran al sitio web, no hay chat, no hay respuesta, se van. Un cliente en USA que habla inglés: sin opciones."',
+    pain:'🌐 Visitantes del sitio web que no encuentran respuesta y se van',
+    painColor:'var(--c7)',
+    dur:18000, type:'chat',
+    hdr:{ av:{t:'JW',bg:'rgba(74,58,26,.1)',cl:'var(--c7)'}, name:'James Wilson — US Shipper', sub:'abstorage.mx · English detected · intent: freight quote', tag:'💬 Web Chat · EN' },
+    msgs:[
+      {r:'u', text:"Hi, I found your site while looking for cross-border freight from Laredo TX to Mexico City. Do you handle customs and reefer units?"},
+      {r:'sys', text:'→ Chat Widget: English · Intent: cross-border + reefer → Lead Response EN mode'},
+      {r:'a', label:'Chat Widget · ABStorage', text:"Hi James! Yes — we handle full cross-border freight including customs on both sides, and we have reefer units available for temperature-sensitive cargo.\n\nHow many tons and when do you need to move?", pill:'🌐 EN mode · cross-border routing · <1 seg'},
+      {r:'u', text:"6 tons, fresh produce. Within 5 days."},
+      {r:'a', label:'Chat Widget · ABStorage', text:"6 tons Laredo–CDMX in 5 days — we can do that. What's your company name and email?"},
+      {r:'u', text:"Wilson Fresh Co. james@wilsonfresh.com"},
+      {r:'a', label:'Chat Widget · ABStorage', card:{
+        ac:'var(--c7)',
+        title:'📋 Lead Captured · Cross-Border',
+        rows:[
+          {k:'Contact',  v:'James Wilson'},
+          {k:'Company',  v:'Wilson Fresh Co.'},
+          {k:'Route',    v:'Laredo TX → CDMX'},
+          {k:'Load',     v:'6 tons · reefer · fresh produce'},
+          {k:'Timeline', v:'5 days'},
+          {k:'Status',   v:'Sent to sales team', hi:true},
+        ]
+      }, pill:'→ Notificación enviada al equipo · respuesta en < 2h'},
+    ]
+  },
+];
+
+// ── SUMMARY DATA ──────────────────────────────────────────────────────────────
+
+const SUMMARY = [
+  { id:0, icon:'📈', name:'SEO · Posicionador',     desc:'Clientes que buscan en Google te encuentran a ti, no a la competencia.', stat:'4 leads/semana via Google', color:'var(--c1)' },
+  { id:1, icon:'🎧', name:'Lead Response',           desc:'Responde en <2 seg a cualquier hora. Ningún lead se queda sin contestar.', stat:'⚡ < 2 seg · 24/7', color:'var(--c2)' },
+  { id:2, icon:'📅', name:'Appointment Scheduler',   desc:'Agenda visitas y llamadas solo, sin coordinación manual ni doble-agenda.', stat:'0 citas perdidas', color:'var(--c3)' },
+  { id:3, icon:'⭐', name:'Review Response',         desc:'Responde a cada reseña de Google. Las negativas van a aprobación del dueño.', stat:'100% respondidas', color:'var(--c4)' },
+  { id:4, icon:'🔁', name:'Follow-Up Sequence',      desc:'D+1, D+3, D+7, D+30 — 4 mensajes automáticos que reactivan clientes dormidos.', stat:'+18% clientes que regresan', color:'var(--c5)' },
+  { id:5, icon:'📋', name:'FAQ Agent',               desc:'Resuelve el 91% de preguntas operativas sin intervención de tu equipo.', stat:'–2h equipo/día', color:'var(--c6)' },
+  { id:6, icon:'💠', name:'Chat Widget EN+ES',       desc:'Captura leads del sitio web en inglés o español y los rutea al agente correcto.', stat:'EN + ES · <1 seg routing', color:'var(--c7)' },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let cur = 0, paused = false, sceneTO = null, clockInt = null;
+const TOTAL = AG.length;
+const wait = ms => new Promise(r => {
+  let elapsed = 0;
+  const tick = () => {
+    if (elapsed >= ms) { r(); return; }
+    setTimeout(() => { if (!paused) elapsed += 50; tick(); }, 50);
+  };
+  tick();
+});
+
+// ── CLOCK ─────────────────────────────────────────────────────────────────────
+function startClock() {
+  const base = new Date(); base.setHours(9,14,0,0);
+  if (clockInt) clearInterval(clockInt);
+  clockInt = setInterval(() => {
+    base.setSeconds(base.getSeconds()+1);
+    const h = base.getHours(), m = String(base.getMinutes()).padStart(2,'0');
+    document.getElementById('clockEl').textContent = h+':'+m;
+  }, 1000);
+}
+
+// ── BUILD UI ──────────────────────────────────────────────────────────────────
+function build() {
+  const wrap = document.getElementById('wrap');
+  const prog = document.getElementById('prog');
+  const chips = document.getElementById('chips');
+  const bnav = document.getElementById('bnav');
+
+  AG.forEach(ag => {
+    // Progress segment
+    const seg = document.createElement('div');
+    seg.className = 'pseg'; seg.id = 'seg_'+ag.id;
+    seg.innerHTML = `<div class="pfill" id="fill_${ag.id}" style="background:${ag.hex}"></div>`;
+    prog.appendChild(seg);
+
+    // Chip
+    const chip = document.createElement('div');
+    chip.className = 'chip'; chip.id = 'chip_'+ag.id;
+    chip.style.setProperty('--ac', ag.color);
+    chip.innerHTML = `<div class="chipdot"></div>${ag.nav}`;
+    chip.onclick = () => jumpTo(ag.id);
+    chips.appendChild(chip);
+
+    // Nav button
+    const btn = document.createElement('div');
+    btn.className = 'bnav-btn'; btn.id = 'nav_'+ag.id;
+    btn.style.setProperty('--bc', ag.hex);
+    btn.innerHTML = `<div class="bnav-icon">${ag.icon}</div><div class="bnav-lbl">${ag.nav}</div>`;
+    btn.onclick = () => jumpTo(ag.id);
+    bnav.appendChild(btn);
+
+    // Summary nav button (last slot)
+    if (ag.id === AG.length - 1) {
+      const sumBtn = document.createElement('div');
+      sumBtn.className = 'bnav-btn'; sumBtn.id = 'nav_sum';
+      sumBtn.style.setProperty('--bc', '#888');
+      sumBtn.innerHTML = `<div class="bnav-icon">📊</div><div class="bnav-lbl">Resumen</div>`;
+      sumBtn.onclick = () => jumpTo('sum');
+      bnav.appendChild(sumBtn);
+    }
+
+    // Build scene
+    const scene = document.createElement('div');
+    scene.className = 'scene'; scene.id = 'scene_'+ag.id;
+
+    // Header
+    const h = ag.hdr;
+    const hdr = document.createElement('div');
+    hdr.className = 'shdr';
+    hdr.innerHTML = `<div class="shdr-av" style="background:${h.av.bg};color:${h.av.cl};border-color:${ag.hex}44">${h.av.t}</div>
+      <div style="flex:1;min-width:0">
+        <div class="shdr-name">${h.name}</div>
+        <div class="shdr-sub">${h.sub}</div>
+      </div>
+      <div class="shdr-tag">${h.tag}</div>`;
+    scene.appendChild(hdr);
+
+    // Pain banner
+    const pb = document.createElement('div');
+    pb.className = 'pain-banner';
+    pb.innerHTML = `<div class="pbdot" style="background:${ag.hex}"></div><span>${ag.pain}</span>`;
+    scene.appendChild(pb);
+
+    // Content
+    if (ag.type === 'seo') {
+      const sb = document.createElement('div');
+      sb.className = 'seo-body'; sb.id = 'seo_'+ag.id;
+      scene.appendChild(sb);
+    } else {
+      const msgs = document.createElement('div');
+      msgs.className = 'msgs'; msgs.id = 'msgs_'+ag.id;
+      scene.appendChild(msgs);
+    }
+
+    wrap.insertBefore(scene, document.getElementById('cin'));
+  });
+
+  // Build summary scene
+  buildSummary(wrap);
+}
+
+function buildSummary(wrap) {
+  const s = document.createElement('div');
+  s.className = 'summary-scene'; s.id = 'scene_sum';
+
+  s.innerHTML = `
+    <div class="sum-header">
+      <div class="sum-eyebrow">CAPA 2 · CUIDADO DEL MERCADO · ABStorage</div>
+      <div class="sum-title">7 agentes que protegen<br>tu cartera.</div>
+      <div class="sum-sub">Cada agente resuelve un dolor real de su operación — activos desde el día 1, sin contratos anuales.</div>
+    </div>
+    <div class="sum-body" id="sum-body"></div>
+    <div class="sum-cta">
+      <div class="cta-line">¿Cuántos leads perdió ABStorage esta semana?</div>
+      <div class="cta-row">
+        <div class="cta-btn primary" onclick="window.open('https://wa.me/5218112345678?text=Hola, vi el demo de Vortex AI Agents para ABStorage y me interesa hablar.')">📲 Hablar por WhatsApp</div>
+        <div class="cta-btn secondary" onclick="window.open('https://vortexagents.ai')">🌐 vortexagents.ai</div>
+      </div>
+    </div>`;
+
+  wrap.insertBefore(s, document.getElementById('cin'));
+}
+
+// ── PLAY SCENE ────────────────────────────────────────────────────────────────
+async function playScene(ag) {
+  if (ag.type === 'seo') await playSEO(ag);
+  else await playChat(ag);
+}
+
+async function playSEO(ag) {
+  const body = document.getElementById('seo_'+ag.id);
+  if (!body) return;
+
+  await wait(300);
+  const kws = [
+    {t:'broker de carga Guadalajara',  pos:'#1', pct:94, ok:true},
+    {t:'transporte caja seca GDL–MTY', pos:'#2', pct:85, ok:true},
+    {t:'carta porte 2.0 transporte',   pos:'#3', pct:76, ok:true},
+    {t:'flete carga general precio',   pos:'#6', pct:42},
+    {t:'empresa transporte Laredo MX', pos:'#5', pct:55, ok:true},
+  ];
+  const c1 = mkSeoCard(body, 'Keywords posicionadas · semana 11');
+  c1.innerHTML += kws.map(k=>`<div class="kw-row">
+    <div class="kw-t">${k.t}</div>
+    <div class="kw-bar"><div class="kw-fill" id="kf_${k.pos.replace('#','')}" style="background:${k.ok?'var(--c1)':'var(--ink4)'}"></div></div>
+    <div class="kw-pos" style="color:${k.ok?'var(--c1)':'var(--ink4)'}">${k.pos}</div>
+  </div>`).join('');
+  body.appendChild(c1);
+  await wait(200);
+  kws.forEach((k,i)=>{
+    setTimeout(()=>{
+      const f=document.getElementById('kf_'+k.pos.replace('#',''));
+      if(f) f.style.width=k.pct+'%';
+    }, i*130);
+  });
+
+  await wait(1500);
+  const postId = 'gbp_'+ag.id;
+  const c2 = mkSeoCard(body, 'Post publicado · Google Business Profile');
+  c2.innerHTML += `<div class="gbp-post">
+    <div class="gbp-meta">📍 ABStorage Fletes · Publicado hoy 9:05 AM · automático</div>
+    <span id="${postId}"></span>
+  </div>
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px">
+    <div class="pill" style="color:var(--c1);border-color:var(--c1);background:var(--d1)">✅ GBP publicado</div>
+    <div class="pill" style="color:var(--c6);border-color:var(--c6);background:var(--d6)">🤖 AEO · AI optimizado</div>
+  </div>`;
+  body.appendChild(c2);
+  const postEl = document.getElementById(postId);
+  const sents = [
+    '¿Necesitas <span class="gbp-kw">flete de carga seca Guadalajara a Monterrey</span> esta semana? ',
+    'En ABStorage asignamos unidad verificada el mismo día que confirmas. ',
+    'Carta Porte 2.0 incluida, GPS en tiempo real y seguro de carga. ',
+    '¿Cotización? En menos de 30 minutos. 🚛'
+  ];
+  for (const s of sents) { if(postEl) postEl.innerHTML += s; await wait(360); }
+
+  await wait(700);
+  const c3 = mkSeoCard(body, 'Menciones en AI Engines · esta semana');
+  c3.innerHTML += [
+    {n:'ChatGPT',          v:9, d:'↑3', ok:true},
+    {n:'Perplexity',       v:7, d:'↑2', ok:true},
+    {n:'Google AI Overview',v:5,d:'↑5 nueva',ok:true},
+    {n:'Gemini',           v:2, d:'→'},
+  ].map(r=>`<div class="ai-row">
+    <span class="ai-name">${r.n}</span>
+    <span class="ai-n" style="color:${r.ok?'var(--c1)':'var(--ink3)'}">${r.v}</span>
+    <span class="ai-d" style="color:${r.ok?'var(--c1)':'var(--ink4)'}">${r.d}</span>
+  </div>`).join('');
+  body.appendChild(c3);
+
+  await wait(700);
+  const c4 = mkSeoCard(body, 'Revenue atribuido a E9 esta semana');
+  c4.innerHTML += `<div style="font-family:var(--serif);font-size:32px;font-weight:900;color:var(--c1);line-height:1;margin-bottom:2px">4 leads</div>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--ink4);margin-bottom:8px">orgánicos · ↑2 vs semana anterior</div>
+    <div style="background:color-mix(in srgb,var(--c1) 8%,white);border:1px solid color-mix(in srgb,var(--c1) 20%,white);border-radius:8px;padding:8px 10px;margin-bottom:8px">
+      <div style="font-family:var(--mono);font-size:8px;color:var(--ink4);margin-bottom:2px">Valor potencial estimado</div>
+      <div style="font-family:var(--serif);font-size:22px;font-weight:900;color:var(--c1)">~$148,000 MXN</div>
+      <div style="font-family:var(--mono);font-size:8px;color:var(--ink3)">4 fletes promedio $37K cada uno</div>
+    </div>
+    <div style="font-size:11px;color:var(--ink3);line-height:1.6">E9 no es un costo.<br><strong style="color:var(--c1)">Es un generador de revenue medible.</strong></div>`;
+  body.appendChild(c4);
+}
+
+function mkSeoCard(body, lbl) {
+  const c = document.createElement('div');
+  c.className = 'seo-card';
+  c.innerHTML = `<div class="sc-lbl">${lbl}</div>`;
+  return c;
+}
+
+async function playChat(ag) {
+  const cont = document.getElementById('msgs_'+ag.id);
+  if (!cont || !ag.msgs) return;
+  for (const msg of ag.msgs) {
+    await wait(msg.r==='sys' ? 400 : 900);
+    if (msg.r==='sys')  { addSys(cont, msg.text);       await wait(400); continue; }
+    if (msg.r==='rev')  { addRev(cont, msg, ag);         await wait(500); continue; }
+    if (msg.r==='u')    { addUser(cont, msg, ag);        await wait(500); continue; }
+    addTyping(cont, ag);
+    await wait(msg.card ? 1300 : 1050);
+    removeTyping(ag.id);
+    addAgent(cont, msg, ag);
+    await wait(msg.card ? 2100 : 1700);
+  }
+}
+
+// ── MESSAGE BUILDERS ──────────────────────────────────────────────────────────
+function addSys(c, text) {
+  const d = document.createElement('div');
+  d.className='msg';
+  d.innerHTML=`<div class="sys-note">${text}</div>`;
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+function addUser(c, msg, ag) {
+  const d = document.createElement('div');
+  d.className='msg r';
+  const h=ag.hdr;
+  d.innerHTML=`<div class="mcont" style="align-items:flex-end">
+    <div class="mb">${msg.text.replace(/\n/g,'<br>')}</div>
+  </div>
+  <div class="mav" style="background:${h.av.bg};color:${h.av.cl}">${h.av.t}</div>`;
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+function addRev(c, msg, ag) {
+  const d = document.createElement('div');
+  d.className='msg r';
+  const h=ag.hdr;
+  d.innerHTML=`<div class="mcont" style="align-items:flex-end">
+    <div class="rev-card">
+      <div class="rev-stars">${msg.stars}</div>
+      <div class="rev-text">${msg.text}</div>
+      <div class="rev-auth">${msg.auth}</div>
+    </div>
+  </div>
+  <div class="mav" style="background:${h.av.bg};color:${h.av.cl}">⭐</div>`;
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+function addAgent(c, msg, ag) {
+  const d = document.createElement('div');
+  d.className='msg l';
+  let body=`<div class="msend">${msg.label||''}</div>`;
+  if (msg.card) {
+    const rows=msg.card.rows.map(r=>
+      `<div class="card-row"><span class="card-k">${r.k}</span><span class="card-v ${r.hi?'hi':''}">${r.v}</span></div>`
+    ).join('');
+    body+=`<div class="card" style="border-top:2px solid ${msg.card.ac}">
+      <div class="card-title">${msg.card.title}</div>${rows}</div>`;
+  } else {
+    body+=`<div class="mb">${(msg.text||'').replace(/\n/g,'<br>')}</div>`;
+  }
+  if (msg.pill) {
+    body+=`<div class="pill" style="color:${ag.hex};border-color:${ag.hex};background:${ag.dim}">${msg.pill}</div>`;
+  }
+  d.innerHTML=`<div class="mav" style="background:${ag.dim};color:${ag.hex};border-color:${ag.hex}33">${ag.icon}</div>
+    <div class="mcont">${body}</div>`;
+  c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+function addTyping(c, ag) {
+  const t=document.createElement('div');
+  t.className='msg l'; t.id='tw_'+ag.id;
+  t.innerHTML=`<div class="mav" style="background:${ag.dim};color:${ag.hex}">${ag.icon}</div>
+    <div class="mcont"><div class="typing-mb"><div class="typing"><span></span><span></span><span></span></div> redactando...</div></div>`;
+  c.appendChild(t); c.scrollTop=c.scrollHeight;
+}
+function removeTyping(id) { const t=document.getElementById('tw_'+id); if(t)t.remove(); }
+
+// ── SUMMARY ───────────────────────────────────────────────────────────────────
+async function playSummary() {
+  const body = document.getElementById('sum-body');
+  if (!body || body.children.length > 0) return;
+  for (let i=0; i<SUMMARY.length; i++) {
+    await wait(220);
+    const ag = SUMMARY[i];
+    const d = document.createElement('div');
+    d.className='sum-agent';
+    d.style.animationDelay = (i*.08)+'s';
+    d.innerHTML=`<div class="sum-agent-icon" style="background:color-mix(in srgb,${ag.color} 8%,white);border-color:color-mix(in srgb,${ag.color} 20%,white)">${ag.icon}</div>
+      <div class="sum-agent-body">
+        <div class="sum-agent-name">${ag.name}</div>
+        <div class="sum-agent-desc">${ag.desc}</div>
+        <div class="sum-stat" style="color:${ag.color};border-color:${ag.color};background:color-mix(in srgb,${ag.color} 8%,white)">✓ ${ag.stat}</div>
+      </div>`;
+    body.appendChild(d);
+  }
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function deactivateAll() {
+  AG.forEach(ag => {
+    document.getElementById('seg_'+ag.id)?.classList.remove('active','done');
+    document.getElementById('chip_'+ag.id)?.classList.remove('active');
+    document.getElementById('nav_'+ag.id)?.classList.remove('active');
+    document.getElementById('scene_'+ag.id)?.classList.remove('on');
+  });
+  document.getElementById('nav_sum')?.classList.remove('active');
+  document.getElementById('scene_sum')?.classList.remove('on');
+}
+
+async function showCin(ag) {
+  const ov = document.getElementById('cin');
+  document.getElementById('cin-num').textContent  = ag.ecod ? `CAPA 2 · ${ag.ecod}` : `Agente ${String(ag.id+1).padStart(2,'0')} · 07`;
+  document.getElementById('cin-name').textContent  = ag.cinName;
+  document.getElementById('cin-name').style.color  = ag.hex;
+  document.getElementById('cin-desc').textContent  = ag.cinDesc;
+  document.getElementById('cin-pain').textContent  = ag.cinPain;
+  ov.classList.add('show');
+  await wait(2200);
+  ov.classList.remove('show');
+  await wait(380);
+}
+
+async function goTo(idx, skipCin=false) {
+  deactivateAll();
+
+  if (idx === 'sum') {
+    document.getElementById('nav_sum').classList.add('active');
+    document.getElementById('scene_sum').classList.add('on');
+    // Mark all done
+    AG.forEach(ag => {
+      document.getElementById('seg_'+ag.id).classList.add('done');
+    });
+    playSummary();
+    if (sceneTO) clearTimeout(sceneTO);
+    return;
+  }
+
+  cur = idx;
+  const ag = AG[idx];
+
+  // Progress
+  for (let i=0;i<idx;i++) document.getElementById('seg_'+i).classList.add('done');
+  const seg = document.getElementById('seg_'+idx);
+  seg.classList.add('active');
+  seg.style.setProperty('--d', (ag.dur/1000)+'s');
+  const fill = document.getElementById('fill_'+idx);
+  fill.style.animation = 'none'; fill.offsetHeight;
+  fill.style.animation = '';
+
+  // Chip + nav
+  document.getElementById('chip_'+idx)?.classList.add('active');
+  document.getElementById('chip_'+idx)?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  document.getElementById('nav_'+idx)?.classList.add('active');
+
+  // Cinematic
+  if (!skipCin) await showCin(ag);
+
+  // Activate scene
+  document.getElementById('scene_'+idx)?.classList.add('on');
+
+  // Play content
+  playScene(ag);
+
+  // Schedule next
+  if (sceneTO) clearTimeout(sceneTO);
+  sceneTO = setTimeout(() => {
+    const next = (cur+1 < TOTAL) ? cur+1 : 'sum';
+    goTo(next);
+  }, ag.dur);
+}
+
+function jumpTo(idx) {
+  if (sceneTO) clearTimeout(sceneTO);
+  goTo(idx, idx === cur);
+}
+
+// ── PAUSE / PLAY ──────────────────────────────────────────────────────────────
+document.getElementById('tapArea').addEventListener('click', () => {
+  paused = !paused;
+  const badge = document.getElementById('pauseBadge');
+  badge.textContent = paused ? '▶' : '⏸';
+  badge.classList.toggle('show', paused);
+  if (!paused) setTimeout(() => badge.classList.remove('show'), 800);
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.onload = () => {
+  build();
+  startClock();
+  goTo(0, true);
+};
+</script>
+</body>
+</html>

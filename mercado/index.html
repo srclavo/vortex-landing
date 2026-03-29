@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capa 2 · Cuidado del Mercado — Vortex AI Agents</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080a0f;--bg2:#0d1018;--bg3:#111520;
+  --panel:#12161f;--bdr:#1e2433;--bdr2:#252d3f;
+  --ink:#f0f4ff;--ink2:#b8c4e0;--ink3:#6b7a99;--ink4:#3a4560;
+  --green:#00e5a0;--blue:#4d9fff;
+  --sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;--display:'Bebas Neue',sans-serif;
+}
+html,body{min-height:100%;background:var(--bg);font-family:var(--sans);color:var(--ink)}
+
+/* TOPBAR */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;border-bottom:1px solid var(--bdr);
+  background:rgba(8,10,15,.9);backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:100;
+}
+.tb-logo{font-family:var(--display);font-size:20px;letter-spacing:.05em;color:var(--green)}
+.tb-back{font-family:var(--mono);font-size:11px;color:var(--ink3);text-decoration:none;transition:.2s}
+.tb-back:hover{color:var(--green)}
+
+/* HERO */
+.hero{
+  padding:80px 32px 64px;text-align:center;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,229,160,.06) 0%, transparent 70%);
+}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px}
+.hero-title{font-family:var(--display);font-size:clamp(52px,8vw,88px);letter-spacing:.03em;line-height:.95;margin-bottom:20px;
+  background:linear-gradient(135deg,var(--ink) 40%,var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:16px;color:var(--ink2);max-width:520px;margin:0 auto;line-height:1.7}
+
+/* CARDS */
+.cards-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:24px;max-width:800px;margin:64px auto;padding:0 32px 80px;
+}
+.demo-card{
+  background:var(--panel);border:1px solid var(--bdr);border-radius:16px;
+  padding:32px;cursor:pointer;text-decoration:none;
+  transition:all .3s;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;gap:16px;
+}
+.demo-card::before{
+  content:'';position:absolute;inset:0;border-radius:16px;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,var(--card-glow,rgba(0,229,160,.08)) 0%,transparent 70%);
+  opacity:0;transition:opacity .3s;
+}
+.demo-card:hover{border-color:var(--card-accent,var(--green));transform:translateY(-4px)}
+.demo-card:hover::before{opacity:1}
+
+.card-icon{font-size:40px;line-height:1}
+.card-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.12em;text-transform:uppercase}
+.card-name{font-family:var(--display);font-size:32px;letter-spacing:.03em;color:var(--ink);line-height:1}
+.card-desc{font-size:13px;color:var(--ink2);line-height:1.6;flex:1}
+.card-agents{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;
+}
+.agent-chip{
+  font-family:var(--mono);font-size:9px;padding:3px 8px;
+  border-radius:20px;border:1px solid var(--bdr2);color:var(--ink3);
+}
+.card-cta{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:16px;border-top:1px solid var(--bdr);
+  font-family:var(--mono);font-size:11px;color:var(--card-accent,var(--green));
+}
+
+/* Footer */
+.footer{
+  text-align:center;padding:24px;border-top:1px solid var(--bdr);
+  font-family:var(--mono);font-size:10px;color:var(--ink4);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-logo">VORTEX AI</div>
+  <a href="/abstorage/" class="tb-back">← ABStorage</a>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Capa 2 · Cuidado del Mercado</div>
+  <div class="hero-title">6 AGENTES<br>QUE VENDEN<br>POR TI</div>
+  <div class="hero-sub">Demos interactivos tropicalizados por industria. Elige el que aplica a tu negocio.</div>
+</div>
+
+<div class="cards-grid">
+
+  <a href="/mercado/abstorage/" class="demo-card" style="--card-accent:#00e5a0;--card-glow:rgba(0,229,160,.08)">
+    <div class="card-icon">🚛</div>
+    <div>
+      <div class="card-label">Demo · Freight Broker</div>
+      <div class="card-name">ABStorage</div>
+    </div>
+    <div class="card-desc">Broker de carga GDL–MTY. 7 agentes activos: posicionamiento SEO, leads por WhatsApp, citas de diagnóstico, reviews de Google y follow-up post-viaje.</div>
+    <div class="card-agents">
+      <span class="agent-chip">📈 SEO</span>
+      <span class="agent-chip">🎧 Lead Response</span>
+      <span class="agent-chip">📅 Appointment</span>
+      <span class="agent-chip">⭐ Reviews</span>
+      <span class="agent-chip">🔁 Follow-Up</span>
+      <span class="agent-chip">📋 FAQ</span>
+      <span class="agent-chip">💠 Widget EN+ES</span>
+    </div>
+    <div class="card-cta">
+      <span>Ver demo en vivo</span>
+      <span>→</span>
+    </div>
+  </a>
+
+  <a href="/mercado/dental/" class="demo-card" style="--card-accent:#4d9fff;--card-glow:rgba(77,159,255,.08)">
+    <div class="card-icon">🦷</div>
+    <div>
+      <div class="card-label">Demo · Clínica Dental</div>
+      <div class="card-name">Dental Montoya</div>
+    </div>
+    <div class="card-desc">Clínica dental en Monterrey. 7 agentes que capturan pacientes nuevos, agendan consultas 24/7, responden reseñas y reactivan pacientes dormidos.</div>
+    <div class="card-agents">
+      <span class="agent-chip">📈 SEO</span>
+      <span class="agent-chip">🎧 Lead Response</span>
+      <span class="agent-chip">📅 Citas 24/7</span>
+      <span class="agent-chip">⭐ Reviews</span>
+      <span class="agent-chip">🔁 Follow-Up</span>
+      <span class="agent-chip">📋 FAQ</span>
+      <span class="agent-chip">💠 Widget EN+ES</span>
+    </div>
+    <div class="card-cta">
+      <span>Ver demo en vivo</span>
+      <span>→</span>
+    </div>
+  </a>
+
+</div>
+
+<div class="footer">Respuesta: &lt;1 segundo · Demo: vortexagents.ai · Powered by Vortex AI Agents</div>
+
+</body>
+</html>
