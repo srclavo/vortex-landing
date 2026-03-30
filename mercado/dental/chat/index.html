@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Dental Montoya · Demo Interactivo — Vortex AI Agents</title>
+<title>Bright Smile Dental · Demo Interactivo — Vortex AI Agents</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -93,7 +93,7 @@ html,body{height:100%;overflow:hidden;background:#e0d8cc;font-family:var(--sans)
 
   <div class="sbar">
     <span style="font-size:11px;font-weight:500;color:var(--ink2)" id="clockEl">9:14</span>
-    <span class="sbar-brand">Dental Montoya</span>
+    <span class="sbar-brand">Bright Smile Dental</span>
     <span style="font-size:11px;color:var(--ink4)">📶 🔋</span>
   </div>
 
@@ -102,7 +102,7 @@ html,body{height:100%;overflow:hidden;background:#e0d8cc;font-family:var(--sans)
       <div class="logo">
         <div class="logo-mark">DM</div>
         <div>
-          <div class="logo-name">Dental Montoya</div>
+          <div class="logo-name">Bright Smile Dental</div>
           <div class="logo-sub">Powered by Vortex AI Agents</div>
         </div>
       </div>
@@ -114,7 +114,7 @@ html,body{height:100%;overflow:hidden;background:#e0d8cc;font-family:var(--sans)
   <div class="chat-hdr" id="chatHdr">
     <div class="chat-av" id="chatAv">🤖</div>
     <div style="flex:1;min-width:0">
-      <div class="chat-name" id="chatName">Agente Dental Montoya</div>
+      <div class="chat-name" id="chatName">Agente Bright Smile Dental</div>
       <div class="chat-sub" id="chatSub">Listo para atenderte</div>
     </div>
     <div class="chat-tag" id="chatTag">📲 Agente IA</div>
@@ -137,49 +137,49 @@ html,body{height:100%;overflow:hidden;background:#e0d8cc;font-family:var(--sans)
 </div>
 <script>
 const API_BASE = 'https://api.vortexagents.ai/api/v1';
-const BUSINESS_ID = 'dental_montoya';
+const BUSINESS_ID = 'bright-smile-dental';
 const SESSION_ID = 'session_' + Math.random().toString(36).slice(2, 10);
 
 const AGENTS = [
   {
     id: 'supervisor',
     label: '🤖 Auto',
-    av: '🦷', name: 'Agente Dental Montoya', sub: 'El supervisor rutea al especialista', tag: '🧠 Supervisor',
-    ctx: 'El supervisor detecta tu intención y te conecta con el agente correcto automáticamente',
-    welcome: 'Hola, bienvenido a Dental Montoya 🦷\n¿En qué te puedo ayudar? Puedo informarte sobre tratamientos, agendar una cita, responder preguntas o lo que necesites.',
-    suggestions: ['¿Cuánto cuesta un implante?', 'Quiero agendar una limpieza', '¿Aceptan seguro MetLife?', 'Do you treat dental tourism patients?'],
+    av: '🦷', name: 'Bright Smile Dental', sub: 'Agent routes to the right specialist', tag: '🧠 Supervisor',
+    ctx: 'The supervisor detects your intent and connects you with the right agent automatically',
+    welcome: "Hi! Welcome to Bright Smile Dental in The Woodlands, TX 🦷\nHow can I help you? I can schedule appointments, answer questions, or anything else you need.",
+    suggestions: ['How much is a dental cleaning?', 'I need to schedule an appointment', 'Do you accept Delta Dental?', '¿Hablan español?'],
   },
   {
     id: 'lead_response',
     label: '🎧 Lead',
-    av: '🎧', name: 'Lead Response', sub: 'Convierte consultas en pacientes nuevos', tag: '📲 WhatsApp',
-    ctx: 'Simula ser un paciente nuevo preguntando por un tratamiento dental',
-    welcome: '¡Hola! Soy el agente de atención de Dental Montoya 🦷\n¿Qué tratamiento te interesa? Cuéntame tu caso y te oriento.',
-    suggestions: ['Me interesa ponerme implantes', 'Busqué dentista en Google y salieron', '¿Tienen ortodoncia para adultos?', '¿Hacen blanqueamiento?'],
+    av: '🎧', name: 'Lead Response', sub: 'Converts inquiries into new patients', tag: '📲 SMS / Web',
+    ctx: 'Act as a new patient asking about a dental treatment in The Woodlands',
+    welcome: "Hi! I'm the patient care agent at Bright Smile Dental 🦷\nWhat treatment are you interested in? Tell me about your case and I'll guide you.",
+    suggestions: ["I'm interested in teeth whitening", 'Found you searching for dentist in The Woodlands', 'Do you offer Invisalign?', 'I need a new patient appointment'],
   },
   {
     id: 'appointment',
-    label: '📅 Citas',
-    av: '📅', name: 'Appointment Scheduler', sub: 'Agenda consultas 24/7', tag: '📲 WhatsApp',
-    ctx: 'Pide agendar una cita — limpieza, valoración o consulta de urgencia',
-    welcome: '¡Hola! Te ayudo a agendar tu cita en Dental Montoya 📅\n¿Qué tratamiento necesitas y cuándo te vendría bien?',
-    suggestions: ['Quiero agendar una limpieza esta semana', '¿Tienen cita de urgencia hoy?', 'Necesito una valoración para implante', '¿Tienen horario los sábados?'],
+    label: '📅 Appts',
+    av: '📅', name: 'Appointment Scheduler', sub: 'Book appointments 24/7', tag: '📲 SMS / Web',
+    ctx: 'Ask to schedule an appointment — cleaning, whitening, or emergency',
+    welcome: "Hi! I can book your appointment at Bright Smile Dental 📅\nWhat treatment do you need and when works best for you?",
+    suggestions: ['I need a cleaning this week', 'Do you have appointments today?', 'I want to schedule a whitening consultation', 'Are you open on Saturdays?'],
   },
   {
     id: 'faq',
     label: '📋 FAQ',
-    av: '📋', name: 'FAQ Agent', sub: 'Preguntas frecuentes · base de conocimiento', tag: '💬 Chat',
-    ctx: 'Pregunta sobre precios, seguros, tratamientos o cualquier duda sobre la clínica',
-    welcome: '¡Hola! Soy el agente de preguntas frecuentes de Dental Montoya 📋\n¿Qué necesitas saber? Precios, seguros, tratamientos — pregunta lo que quieras.',
-    suggestions: ['¿Cuánto cuesta una limpieza?', '¿Aceptan AXA?', '¿Cuánto dura el tratamiento de ortodoncia?', '¿Tienen financiamiento?'],
+    av: '📋', name: 'FAQ Agent', sub: 'Answers from the knowledge base', tag: '💬 Web Chat',
+    ctx: 'Ask about prices, insurance, hours, or any question about the practice',
+    welcome: "Hi! I'm the FAQ agent at Bright Smile Dental 📋\nAsk me anything — prices, insurance, hours, treatments.",
+    suggestions: ['How much is teeth whitening?', 'Do you accept MetLife?', 'What are your hours?', 'Do you offer CareCredit?'],
   },
   {
     id: 'bilingual_chat',
     label: '💠 EN+ES',
-    av: '💠', name: 'Chat Widget EN+ES', sub: 'Turismo dental · Texas patients welcome', tag: '🌐 Web',
-    ctx: 'Try in English — perfect for dental tourism patients from Texas',
-    welcome: "Hi! I'm Dental Montoya's bilingual assistant 🦷\nWe serve patients from Texas and across Mexico. How can I help you today?",
-    suggestions: ["I'm from McAllen, how far are you?", 'How much does a crown cost vs US prices?', '¿Tienen WiFi en la sala de espera?', 'Do you offer virtual consultations?'],
+    av: '💠', name: 'Chat Widget EN+ES', sub: 'The Woodlands TX · bilingual support', tag: '🌐 Web',
+    ctx: 'Write in English or Spanish — the agent detects language automatically',
+    welcome: "Hi! I'm Bright Smile Dental's bilingual assistant 🦷\nServing The Woodlands, TX — write in English or Spanish, I've got you covered.",
+    suggestions: ['I need a dentist near The Woodlands', '¿Hablan español en la clínica?', 'What insurances do you take?', '¿Cuánto cuesta una limpieza?'],
   },
 ];
 
@@ -273,14 +273,14 @@ function hideTyping() { document.getElementById('typingIndicator')?.remove(); }
 
 function agentTypeLabel(type) {
   const map = {
-    lead_response: 'Lead Response · Dental Montoya',
-    appointment: 'Appointment Scheduler · Dental Montoya',
-    review_response: 'Review Response · Dental Montoya',
-    faq: 'FAQ Agent · Dental Montoya',
-    bilingual_chat: 'Chat Widget · Dental Montoya',
-    followup: 'Follow-Up · Dental Montoya',
-    dara: 'DARA · Dental Montoya',
-    supervisor: 'Agente Dental Montoya',
+    lead_response: 'Lead Response · Bright Smile Dental — The Woodlands',
+    appointment: 'Appointment Scheduler · Bright Smile Dental — The Woodlands',
+    review_response: 'Review Response · Bright Smile Dental — The Woodlands',
+    faq: 'FAQ Agent · Bright Smile Dental — The Woodlands',
+    bilingual_chat: 'Chat Widget · Bright Smile Dental — The Woodlands',
+    followup: 'Follow-Up · Bright Smile Dental — The Woodlands',
+    dara: 'DARA · Bright Smile Dental — The Woodlands',
+    supervisor: 'Agente Bright Smile Dental',
   };
   return map[type] || ('Agente · ' + type);
 }
