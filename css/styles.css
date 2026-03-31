@@ -34,6 +34,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;
 .nav-links a{color:var(--muted);text-decoration:none;font-size:.81rem;
   letter-spacing:.06em;text-transform:uppercase;font-weight:500;transition:color .2s;}
 .nav-links a:hover{color:var(--white);}
+.nav-link--new{color:#C084FC !important;}
+.nav-link--new:hover{color:#fff !important;}
+.nav-new-badge{display:inline-block;font-size:.6rem;font-family:'JetBrains Mono',monospace;
+  background:#7C6FEA;color:#fff;padding:1px 5px;border-radius:3px;
+  vertical-align:middle;margin-left:4px;letter-spacing:.04em;font-weight:700;}
 .nav-right{display:flex;align-items:center;gap:12px;}
 .lang-toggle{display:flex;align-items:center;background:var(--surface2);
   border:1px solid var(--border);border-radius:6px;overflow:hidden;}

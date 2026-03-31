@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Gracias! — Vortex AI Agents</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  body { display: flex; flex-direction: column; min-height: 100vh; }
+  .ty-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+  }
+  .ty-inner { max-width: 520px; }
+  .ty-icon {
+    width: 72px; height: 72px;
+    background: rgba(0,255,136,.1);
+    border: 1px solid rgba(0,255,136,.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    font-size: 2rem;
+  }
+  .ty-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+  .ty-h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 8vw, 5rem);
+    line-height: .95;
+    letter-spacing: .03em;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+  .ty-h1 span { color: var(--green); }
+  .ty-body {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .ty-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+    text-align: left;
+  }
+  .ty-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+  .ty-step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    color: var(--green);
+    background: rgba(0,255,136,.08);
+    border: 1px solid rgba(0,255,136,.2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .ty-step-text {
+    font-size: .88rem;
+    color: var(--white);
+    line-height: 1.5;
+  }
+  .ty-step-text span { color: var(--muted); display: block; font-size: .8rem; margin-top: 2px; }
+  .ty-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: .85rem;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .ty-back:hover { color: var(--white); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">VORTEX <span>AI</span> AGENTS</div>
+  <ul class="nav-links">
+    <li><a href="/#solution">Agents</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/#cta">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="/#cta" class="btn-cta">Book Strategy Call</a>
+  </div>
+</nav>
+
+<div class="ty-wrap">
+  <div class="ty-inner">
+    <div class="ty-icon">✓</div>
+    <div class="ty-eyebrow">Solicitud recibida</div>
+    <h1 class="ty-h1">¡GRACIAS POR<br><span>CONTACTARNOS!</span></h1>
+    <p class="ty-body">
+      Recibimos tu información. Un especialista de Vortex AI Agents
+      se pondrá en contacto contigo en las próximas <strong style="color:var(--white)">24 horas</strong>
+      para confirmar tu cita.
+    </p>
+
+    <div class="ty-steps">
+      <div class="ty-step">
+        <span class="ty-step-num">01</span>
+        <div class="ty-step-text">
+          Revisamos tu información
+          <span>Analizamos tu negocio antes de la llamada</span>
+        </div>
+      </div>
+      <div class="ty-step">
+        <span class="ty-step-num">02</span>
+        <div class="ty-step-text">
+          Te contactamos en 24 hrs
+          <span>Por email o teléfono para confirmar la cita</span>
+        </div>
+      </div>
+      <div class="ty-step">
+        <span class="ty-step-num">03</span>
+        <div class="ty-step-text">
+          Strategy Call de 30 min
+          <span>Definimos qué agentes tienen más impacto en tu negocio</span>
+        </div>
+      </div>
+    </div>
+
+    <a href="/" class="ty-back">
+      ← Volver al sitio
+    </a>
+  </div>
+</div>
+
+</body>
+</html>
