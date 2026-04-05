@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Tax Protest — Save $3,000+ in 15 Minutes | Vortex AI Agents</title>
+<meta name="description" content="Free AI-powered property tax analysis for Harris and Montgomery County, TX. Find out if you're overpaying — and get a protest package ready in minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080a0f;
+  --surface: #0f1318;
+  --surface2: #161c24;
+  --border: rgba(255,255,255,0.07);
+  --green: #00ff88;
+  --green-dim: rgba(0,255,136,0.08);
+  --amber: #fbbf24;
+  --amber-dim: rgba(251,191,36,0.08);
+  --white: #f0f4f8;
+  --muted: rgba(240,244,248,0.45);
+  --red: #ef4444;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--white); line-height: 1.6; overflow-x: hidden; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 60px;
+  background: rgba(8,10,15,0.9); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: .08em; }
+.nav-logo span { color: var(--green); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.nav-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-link:hover { color: var(--white); }
+.nav-cta {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 8px 18px; border-radius: 6px;
+  background: var(--green); color: var(--bg); border: none; cursor: pointer;
+  text-decoration: none; transition: opacity .2s;
+}
+.nav-cta:hover { opacity: .85; }
+
+/* ── LAYOUT ── */
+.section { padding: 100px 40px; }
+.inner { max-width: 1100px; margin: 0 auto; }
+.section-dark { background: var(--surface); }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--green);
+  margin-bottom: 18px;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: .92; letter-spacing: .02em; margin-bottom: 20px;
+}
+.section-title .g { color: var(--green); }
+.section-title .a { color: var(--amber); }
+.section-sub { font-size: .95rem; color: var(--muted); line-height: 1.7; max-width: 620px; margin-bottom: 40px; }
+
+/* ── HERO ── */
+.hero { padding: 140px 40px 80px; text-align: center; }
+.hero .section-title { margin: 0 auto 20px; }
+.hero .section-sub { margin: 0 auto 36px; max-width: 640px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--amber);
+  background: var(--amber-dim); border: 1px solid rgba(251,191,36,.25);
+  border-radius: 4px; padding: 5px 14px; margin-bottom: 22px;
+}
+.hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; background: var(--green); color: var(--bg);
+  font-weight: 700; font-size: .88rem; border-radius: 8px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: opacity .2s, transform .15s;
+}
+.btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; background: transparent; color: var(--white);
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: .88rem; text-decoration: none; cursor: pointer;
+  transition: border-color .2s;
+}
+.btn-ghost:hover { border-color: var(--green); }
+
+/* ── STATS ── */
+.stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--green); line-height: 1; }
+.stat-label { font-size: .72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .08em; }
+
+/* ── HOW IT WORKS ── */
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+.step-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px; text-align: center; transition: border-color .3s;
+}
+.step-card:hover { border-color: rgba(0,255,136,.2); }
+.step-num {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--green-dim);
+  border: 1px solid rgba(0,255,136,.25); display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--green);
+}
+.step-title { font-weight: 600; font-size: .92rem; margin-bottom: 8px; }
+.step-desc { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+
+/* ── COUNTIES ── */
+.county-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
+.county-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px; transition: border-color .3s;
+}
+.county-card:hover { border-color: rgba(0,255,136,.2); }
+.county-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; margin-bottom: 8px; }
+.county-details { font-size: .82rem; color: var(--muted); line-height: 1.7; }
+.county-tag {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: .58rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--green);
+  background: var(--green-dim); border: 1px solid rgba(0,255,136,.2);
+  border-radius: 4px; padding: 3px 8px; margin-top: 12px;
+}
+
+/* ── PRICING ── */
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; max-width: 700px; }
+.price-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px; transition: border-color .3s;
+}
+.price-card.featured { border-color: rgba(0,255,136,.3); }
+.price-tier { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; margin-bottom: 4px; }
+.price-amount { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--green); margin-bottom: 8px; }
+.price-amount span { font-size: .5em; color: var(--muted); }
+.price-desc { font-size: .8rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.price-cta {
+  width: 100%; padding: 12px; background: var(--green); color: var(--bg);
+  font-weight: 700; font-size: .82rem; border: none; border-radius: 8px;
+  cursor: pointer; text-transform: uppercase; letter-spacing: .05em;
+  font-family: 'DM Sans', sans-serif; transition: opacity .2s;
+}
+.price-cta:hover { opacity: .85; }
+
+/* ── CHAT WIDGET ── */
+.chat-bubble { position: fixed; bottom: 24px; right: 24px; z-index: 999; }
+.chat-label {
+  position: absolute; bottom: 64px; right: 0; white-space: nowrap;
+  background: var(--green); color: var(--bg); padding: 6px 14px;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+}
+.chat-bubble-btn {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--green); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,255,136,.3);
+  transition: transform .2s;
+}
+.chat-bubble-btn:hover { transform: scale(1.08); }
+.chat-bubble-btn svg { width: 26px; height: 26px; fill: var(--bg); }
+
+.chat-window {
+  position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+  width: 380px; height: 540px; border-radius: 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  opacity: 0; pointer-events: none; transform: translateY(20px);
+  transition: opacity .3s, transform .3s;
+}
+.chat-window.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+.chat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.chat-header-info { display: flex; align-items: center; gap: 10px; }
+.chat-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), #00c8ff);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: var(--bg);
+}
+.chat-name { font-weight: 600; font-size: .85rem; }
+.chat-status { font-size: .68rem; color: var(--green); }
+.status-dot { display: inline-block; width: 6px; height: 6px; background: var(--green); border-radius: 50%; margin-right: 4px; }
+.close-btn { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; }
+.close-btn:hover { color: var(--white); }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.msg {
+  max-width: 85%; padding: 10px 14px; border-radius: 12px;
+  font-size: .84rem; line-height: 1.55; word-wrap: break-word;
+}
+.msg.bot { background: var(--surface2); border: 1px solid var(--border); align-self: flex-start; }
+.msg.user { background: rgba(0,255,136,.12); border: 1px solid rgba(0,255,136,.15); align-self: flex-end; }
+
+.typing { display: flex; gap: 5px; padding: 10px 14px; align-self: flex-start; }
+.typing span {
+  width: 8px; height: 8px; background: var(--muted); border-radius: 50%;
+  animation: blink 1.2s infinite;
+}
+.typing span:nth-child(2) { animation-delay: .2s; }
+.typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+.powered-by {
+  padding: 6px; text-align: center; font-size: .62rem; color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+.powered-by a { color: var(--green); text-decoration: none; }
+
+.chat-input-wrap {
+  display: flex; gap: 8px; padding: 12px;
+  border-top: 1px solid var(--border);
+}
+.chat-input {
+  flex: 1; padding: 10px 14px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--white); font-size: .84rem; outline: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.chat-input:focus { border-color: var(--green); }
+.send-btn {
+  width: 40px; height: 40px; border-radius: 8px;
+  background: var(--green); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.send-btn svg { width: 18px; height: 18px; fill: var(--bg); }
+
+/* ── CTA ── */
+.cta-section { text-align: center; padding: 100px 40px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,255,136,.06) 0%, transparent 60%), var(--bg); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 36px 40px; text-align: center;
+  font-size: .75rem; color: var(--muted);
+}
+footer a { color: var(--green); text-decoration: none; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  .section { padding: 60px 20px; }
+  .hero { padding: 100px 20px 60px; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .county-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .stats { gap: 28px; }
+  .chat-window { width: calc(100% - 16px); right: 8px; bottom: 8px; height: 70vh; }
+  nav { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://vortexagents.ai" class="nav-logo" style="text-decoration:none;color:inherit;">VORTEX <span>AI</span> AGENTS</a>
+  <div class="nav-right">
+    <a href="https://vortexagents.ai" class="nav-link">Home</a>
+    <a href="#how" class="nav-link">How It Works</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+    <a href="#" class="nav-cta" onclick="openChat(); return false;">Start Free Analysis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Harris County + Montgomery County, TX</div>
+  <h1 class="section-title">FIND OUT IF YOU'RE<br><span class="g">OVERPAYING</span><br>IN 5 MINUTES.</h1>
+  <p class="section-sub">
+    Texas homeowners overpay property taxes by an average of $1,200/year. Our AI analyzes your property, finds comparable sales, and tells you exactly how much you could save — for free.
+  </p>
+  <div class="hero-ctas">
+    <button class="btn-primary" onclick="openChat()">Start Free Analysis →</button>
+    <a href="#how" class="btn-ghost">How It Works</a>
+  </div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">$0</div>
+      <div class="stat-label">Analysis Cost</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">15 min</div>
+      <div class="stat-label">Time to Results</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$1,200+</div>
+      <div class="stat-label">Avg. Savings</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Counties Covered</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="section section-dark">
+  <div class="inner">
+    <div class="eyebrow">How It Works</div>
+    <h2 class="section-title">THREE STEPS TO<br><span class="g">LOWER TAXES.</span></h2>
+    <p class="section-sub">No forms. No phone calls. Just chat with our AI — it does the research for you.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Tell Us Your Property</div>
+        <div class="step-desc">Share your address or account number in the chat. Our system pulls your current appraisal data from HCAD or MCAD automatically.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">AI Analyzes Your Case</div>
+        <div class="step-desc">We compare your appraisal against similar properties, recent sales, and equity data. Three separate legal analyses run simultaneously.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">Get Your Protest Package</div>
+        <div class="step-desc">If we find savings, you get a ready-to-file protest package: case strength assessment, comparable evidence, and a professional argument narrative.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTIES -->
+<section class="section">
+  <div class="inner">
+    <div class="eyebrow">Coverage</div>
+    <h2 class="section-title">BUILT FOR<br><span class="g">YOUR COUNTY.</span></h2>
+    <p class="section-sub">We scrape live data from county appraisal districts — not generic estimates.</p>
+    <div class="county-grid">
+      <div class="county-card">
+        <div class="county-name">Harris County <span style="color:var(--green)">· HCAD</span></div>
+        <div class="county-details">
+          Houston metro's largest county. Over 1.8 million properties. Known for aggressive appraisals and high success rates on protests — if you have the right comparables.
+        </div>
+        <div class="county-tag">Live data · hcad.org</div>
+      </div>
+      <div class="county-card">
+        <div class="county-name">Montgomery County <span style="color:var(--green)">· MCAD</span></div>
+        <div class="county-details">
+          The Woodlands, Conroe, Magnolia, Spring. One of the fastest-growing counties in Texas — which means appraisals often jump faster than actual market value.
+        </div>
+        <div class="county-tag">Live data · mcad-tx.org</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="section section-dark">
+  <div class="inner">
+    <div class="eyebrow">Pricing</div>
+    <h2 class="section-title">FREE ANALYSIS.<br><span class="g">PAY ONLY IF YOU SAVE.</span></h2>
+    <p class="section-sub">We believe in our analysis. If we can't find savings, you pay nothing.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Free Analysis</div>
+        <div class="price-amount">$0</div>
+        <div class="price-desc">Full AI analysis of your property. Case strength assessment. Comparable properties research. You see the numbers before deciding anything.</div>
+        <button class="price-cta" onclick="openChat()">Start Free Analysis</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-tier">Protest Package</div>
+        <div class="price-amount">$79</div>
+        <div class="price-desc">Ready-to-file PDF with professional argument, comparable evidence, and pre-filled forms. Plus guidance on the ARB hearing process.</div>
+        <button class="price-cta" onclick="openChat()">Start with Free Analysis</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FREE CHECKLIST -->
+<section class="section" style="text-align:center;">
+  <div class="inner" style="max-width:520px;">
+    <div class="eyebrow" style="justify-content:center;">Free Download</div>
+    <h2 class="section-title">GET THE PROTEST<br><span class="g">CHECKLIST.</span></h2>
+    <p class="section-sub" style="margin:0 auto 28px;">Step-by-step guide to protesting your property tax in Harris or Montgomery County. Free — enter your email and get instant access.</p>
+    <div id="checklist-form">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+        <input type="email" id="cl-email" placeholder="your@email.com" style="flex:1;min-width:220px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:.88rem;outline:none;font-family:'DM Sans',sans-serif;">
+        <button onclick="downloadChecklist()" style="padding:12px 24px;background:var(--green);color:var(--bg);font-weight:700;font-size:.84rem;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">Send Me the Checklist</button>
+      </div>
+    </div>
+    <div id="checklist-success" style="display:none;">
+      <p style="color:var(--green);font-weight:600;margin-bottom:12px;">Your checklist is ready!</p>
+      <a href="/assets/property-tax-checklist.html" target="_blank" class="btn-primary" style="font-size:.82rem;">Open Your Checklist →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="eyebrow" style="justify-content:center;">Ready?</div>
+  <h2 class="section-title" style="text-align:center;">THE DEADLINE IS<br><span class="a">MAY 15.</span></h2>
+  <p class="section-sub" style="text-align:center;margin:0 auto 36px;max-width:540px;">
+    Texas property tax protests must be filed by May 15 (or 30 days after your notice). Don't leave money on the table — find out what you could save in 15 minutes.
+  </p>
+  <button class="btn-primary" style="font-size:16px;padding:16px 36px;" onclick="openChat()">
+    Start Free Analysis →
+  </button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="https://vortexagents.ai">Vortex AI Agents</a> · A division of Sr Clavo LLC · The Woodlands, TX
+</footer>
+
+<!-- CHAT WIDGET -->
+<div class="chat-bubble" id="chat-bubble">
+  <div class="chat-label" id="chat-label">Analyze your property tax</div>
+  <button class="chat-bubble-btn" onclick="toggleChat()" title="Open chat">
+    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 10H6V10h12v2zm0-3H6V7h12v2z"/></svg>
+  </button>
+</div>
+
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-avatar">A</div>
+      <div>
+        <div class="chat-name">Ana · Property Tax Analyst</div>
+        <div class="chat-status"><span class="status-dot"></span>Online now</div>
+      </div>
+    </div>
+    <button class="close-btn" onclick="toggleChat()">x</button>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="powered-by">Powered by <a href="https://vortexagents.ai" target="_blank">Vortex AI Agents</a></div>
+  <div class="chat-input-wrap">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Enter your address or account number..."
+           onkeydown="if(event.key==='Enter')sendMessage()">
+    <button class="send-btn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const API = 'https://api.vortexagents.ai/api/v1/demo/property-tax/chat';
+const SESSION = 'ptax-' + Math.random().toString(36).slice(2,9);
+let isOpen = false;
+let firstOpen = true;
+
+function toggleChat() {
+  isOpen = !isOpen;
+  document.getElementById('chatWindow').classList.toggle('open', isOpen);
+  document.getElementById('chat-bubble').style.display = isOpen ? 'none' : '';
+  if (isOpen) {
+    if (firstOpen) { firstOpen = false; greet(); }
+    setTimeout(() => document.getElementById('chatInput').focus(), 300);
+  }
+}
+
+function openChat() {
+  if (!isOpen) toggleChat();
+}
+
+function greet() {
+  addMsg('bot', "Hi! I'm Ana, your property tax analyst.\n\nI can analyze your property in Harris or Montgomery County and tell you if you're overpaying.\n\nTo get started, share your:\n- Property address, or\n- County account number\n\nThe analysis is 100% free.");
+}
+
+function formatMsg(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+
+function addMsg(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  if (role === 'bot') {
+    div.innerHTML = formatMsg(text);
+  } else {
+    div.style.whiteSpace = 'pre-wrap';
+    div.textContent = text;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.id = 'typing-indicator';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(t);
+  msgs.scrollTop = msgs.scrollHeight;
+  return t;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  addMsg('user', text);
+  input.value = '';
+
+  const t = showTyping();
+
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, session_id: SESSION })
+    });
+    const data = await res.json();
+    t.remove();
+    let msg = data.message || 'Something went wrong. Please try again.';
+
+    // Detect lead tag and send to proxy
+    const leadMatch = msg.match(/\[LEAD:(\{.*?\})\]/);
+    if (leadMatch) {
+      msg = msg.replace(/\[LEAD:\{.*?\}\]/, '').trim();
+      try {
+        const leadData = JSON.parse(leadMatch[1]);
+        fetch('/api/tax-lead-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadData)
+        });
+      } catch(le) { console.error('Lead parse error:', le); }
+    }
+
+    addMsg('bot', msg);
+  } catch(e) {
+    t.remove();
+    addMsg('bot', 'Connection error. Please try again.');
+  }
+}
+
+async function downloadChecklist() {
+  const email = document.getElementById('cl-email').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Please enter a valid email.'); return;
+  }
+
+  try {
+    const r = await fetch('/api/tax-lead-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: '', email, county: '', interest: 'checklist' })
+    });
+    const d = await r.json();
+    console.log('Result:', d);
+  } catch(e) {
+    console.error('Checklist error:', e);
+  }
+
+  document.getElementById('checklist-form').style.display = 'none';
+  document.getElementById('checklist-success').style.display = 'block';
+}
+
+// Bounce label after 3s
+setTimeout(() => {
+  if (!isOpen) {
+    const label = document.getElementById('chat-label');
+    if (label) label.style.animation = 'bounce-label 1s ease-in-out 3';
+  }
+}, 3000);
+</script>
+</body>
+</html>
