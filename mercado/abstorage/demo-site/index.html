@@ -801,7 +801,9 @@ footer span { color: var(--green); }
 </div>
 
 <script>
-const API = 'https://api.vortexagents.ai/api/v1/demo/abstorage/chat';
+const API = 'https://api.vortexagents.ai/api/v1/agents/dara/chat';
+const API_KEY = 'abstorage_public_2026';
+const BUSINESS_ID = 'abstorage';
 const SESSION = 'demo-abstorage-' + Math.random().toString(36).slice(2,9);
 let isOpen = false;
 let firstOpen = true;
@@ -858,8 +860,8 @@ async function sendMessage() {
   try {
     const res = await fetch(API, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, session_id: SESSION })
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': API_KEY },
+      body: JSON.stringify({ message: text, session_id: SESSION, business_id: BUSINESS_ID })
     });
     const data = await res.json();
     t.remove();
