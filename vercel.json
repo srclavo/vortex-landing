@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/mercado/abstorage/demo-site",
+      "destination": "/mercado/abstorage/ai-chat/",
+      "permanent": true
+    },
+    {
+      "source": "/mercado/abstorage/demo-site/:path*",
+      "destination": "/mercado/abstorage/ai-chat/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/",
