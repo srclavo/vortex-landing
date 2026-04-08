@@ -3,12 +3,17 @@
     {
       "source": "/mercado/abstorage/demo-site",
       "destination": "/mercado/abstorage/ai-chat/",
-      "permanent": true
+      "statusCode": 301
     },
     {
-      "source": "/mercado/abstorage/demo-site/:path*",
-      "destination": "/mercado/abstorage/ai-chat/:path*",
-      "permanent": true
+      "source": "/mercado/abstorage/demo-site/",
+      "destination": "/mercado/abstorage/ai-chat/",
+      "statusCode": 301
+    },
+    {
+      "source": "/mercado/abstorage/demo-site/(.*)",
+      "destination": "/mercado/abstorage/ai-chat/$1",
+      "statusCode": 301
     }
   ],
   "rewrites": [
