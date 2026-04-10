@@ -27,17 +27,24 @@ function toggleChat() {
   document.getElementById('ico-chat').style.display = chatOpen ? 'none' : 'block';
   document.getElementById('ico-close').style.display = chatOpen ? 'block' : 'none';
   document.getElementById('chat-tooltip').classList.remove('visible');
+  document.body.style.overflow = chatOpen ? 'hidden' : '';
   if (chatOpen && document.getElementById('ch-msgs').children.length === 0) initChat();
   if (chatOpen) setTimeout(() => document.getElementById('ch-input').focus(), 180);
 }
 
 function ts() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
 
+function mdToHtml(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
 function addMsg(text, role) {
   const msgs = document.getElementById('ch-msgs');
   const d = document.createElement('div');
   d.className = 'msg ' + role;
-  d.innerHTML = text.replace(/\n/g, '<br>') + `<span class="ts">${ts()}</span>`;
+  d.innerHTML = mdToHtml(text) + `<span class="ts">${ts()}</span>`;
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
 }
@@ -89,6 +96,7 @@ async function sendMsg(text) {
         message: text,
         session_id: getSessionId(),
         business_id: VORTEX_BUSINESS,
+        language: document.documentElement.lang || 'en',
       }),
     });
     hideTyping();
