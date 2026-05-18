@@ -97,7 +97,7 @@ async function loadPosts(){
     }
 
     container.innerHTML = posts.map(p => `
-      <div class="post-card" onclick="location.href='/blog/post.html?slug=${p.slug}'">
+      <div class="post-card" onclick="location.href='/blog/${p.slug}.html'">
         <div class="post-meta">
           <span class="post-keyword">${p.keyword}</span>
           ${fmt(p.published_at)}
