@@ -100,7 +100,7 @@ def generate_html(post: dict) -> str:
             "datePublished": post.get("published_at", ""),
             "author": {
                 "@type": "Person",
-                "name": "Daniel Orozco",
+                "name": "Daniel Orozco, Founder",
                 "url": "https://vortexagents.ai",
             },
             "publisher": {
