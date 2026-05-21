@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://vortexagents.ai/</loc><changefreq>weekly</changefreq><priority>1.0</priority><lastmod>2026-05-18</lastmod></url>
-  <url><loc>https://vortexagents.ai/blog/</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-05-18</lastmod></url>
+  <url><loc>https://vortexagents.ai/</loc><changefreq>weekly</changefreq><priority>1.0</priority><lastmod>2026-05-21</lastmod></url>
+  <url><loc>https://vortexagents.ai/blog/</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-05-21</lastmod></url>
   <url><loc>https://vortexagents.ai/morning-crew.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vortexagents.ai/blog/ai-agent-automation-for-freight-brokers-what-houston-brokers-need-to-know-in-2026.html</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-21</lastmod></url>
+  <url><loc>https://vortexagents.ai/blog/ai-agent-ecosystem-for-small-business-in-texas-why-workflows-alone-wont-cut-it.html</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-20</lastmod></url>
+  <url><loc>https://vortexagents.ai/blog/why-your-local-business-needs-a-multi-agent-ai-system.html</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-19</lastmod></url>
   <url><loc>https://vortexagents.ai/blog/what-ai-for-small-business-actually-means-in-2026.html</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-18</lastmod></url>
   <url><loc>https://vortexagents.ai/blog/ai-agents-for-insurance-claims-from-30-minute-quotes-to-5-minute-quotes.html</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-18</lastmod></url>
   <url><loc>https://vortexagents.ai/blog/the-real-cost-of-disconnected-tools-for-small-businesses.html</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-18</lastmod></url>
