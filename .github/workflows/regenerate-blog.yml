@@ -1,10 +1,13 @@
 name: Regenerate static blog pages
 
 on:
+  # Triggered by the API immediately after a blog post is published
+  repository_dispatch:
+    types: [blog-published]
+  # Daily safety net (5 AM UTC = midnight CDT) in case the dispatch fails
   schedule:
-    # Every day at 6:00 AM UTC (1 AM CDT) — after Neil publishes the night before
-    - cron: '0 6 * * *'
-  workflow_dispatch:  # Manual trigger via Actions tab
+    - cron: '0 5 * * *'
+  workflow_dispatch:  # Manual trigger from Actions tab
 
 permissions:
   contents: write
