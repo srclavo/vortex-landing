@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrar partido · Rifa Mundial 2026</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚽%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --green: #00e87b;
+      --text: #f3f7f4;
+      --muted: #8a9189;
+      --panel: rgba(255,255,255,0.04);
+      --border: rgba(0, 232, 123, 0.18);
+      --border-soft: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: radial-gradient(ellipse 1000px 500px at 50% -100px, rgba(0,232,123,0.10), transparent 70%), var(--bg);
+      color: var(--text);
+      font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 540px; margin: 0 auto; padding: 24px 16px 60px; }
+    h1 { font-family: 'Bebas Neue', system-ui, sans-serif; font-size: 36px; letter-spacing: 0.04em; margin: 0 0 4px; text-shadow: 0 0 16px rgba(0,232,123,0.4); }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 700; margin: 14px 0 6px; }
+    input, select {
+      width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-soft);
+      border-radius: 10px; color: var(--text); padding: 12px 14px; font-size: 16px; font-family: inherit;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,232,123,0.10); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .panel {
+      background: var(--panel); border: 1px solid var(--border-soft);
+      border-radius: 14px; padding: 18px; margin-bottom: 16px;
+    }
+    .panel.accent { border-color: var(--border); box-shadow: 0 6px 20px rgba(0,232,123,0.06); }
+    .btn {
+      background: var(--green); color: #001b0b; border: none; border-radius: 12px;
+      padding: 14px 22px; font-family: inherit; font-weight: 800; font-size: 15px;
+      letter-spacing: 0.04em; cursor: pointer; text-transform: uppercase;
+      transition: transform .12s, box-shadow .15s;
+      box-shadow: 0 6px 20px rgba(0,232,123,0.25);
+      width: 100%;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border-soft); box-shadow: none; }
+    .checkbox-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(0,232,123,0.04); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+    .checkbox-row input { width: auto; }
+    .small-muted { color: var(--muted); font-size: 12px; }
+    .err { color: #ff7a7a; font-size: 13px; margin-top: 8px; min-height: 18px; }
+    .result {
+      margin-top: 18px; padding: 16px; border-radius: 12px;
+      background: rgba(0,232,123,0.08); border: 1px solid var(--border);
+      white-space: pre-wrap; font-size: 14px; line-height: 1.5;
+    }
+    .badge {
+      display: inline-block; padding: 3px 9px; border-radius: 999px;
+      background: rgba(0,232,123,0.15); color: var(--green); font-size: 11px;
+      font-weight: 700; letter-spacing: 0.06em;
+    }
+    a { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚽ REGISTRAR PARTIDO</h1>
+    <p class="sub">Dispara una narración personalizada al grupo cuando termine un partido del Mundial.</p>
+
+    <!-- Step 1: load raffle -->
+    <div class="panel accent" id="auth-panel">
+      <label for="slug-input">Slug de la rifa</label>
+      <input id="slug-input" type="text" placeholder="orozco" autocapitalize="off" autocorrect="off" spellcheck="false" />
+      <label for="code-input">Código de acceso</label>
+      <input id="code-input" type="password" placeholder="código" />
+      <div style="margin-top: 14px;">
+        <button class="btn" onclick="loadRaffle()">Cargar rifa</button>
+      </div>
+      <div class="err" id="auth-err"></div>
+    </div>
+
+    <!-- Step 2: match form (hidden until raffle loaded) -->
+    <div class="panel" id="match-panel" style="display:none;">
+      <div style="display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <strong id="raffle-title"></strong>
+        <span class="badge" id="events-count"></span>
+      </div>
+
+      <label for="stage-select">Fase</label>
+      <select id="stage-select">
+        <option value="octavos">🔥 Octavos</option>
+        <option value="cuartos">⚡ Cuartos</option>
+        <option value="semis">🥉 Semifinales</option>
+        <option value="final">🏆 Final</option>
+        <option value="grupos">Grupos</option>
+      </select>
+
+      <div class="row">
+        <div>
+          <label for="winner-select">Equipo ganador</label>
+          <select id="winner-select"></select>
+        </div>
+        <div>
+          <label for="winner-score">Goles</label>
+          <input id="winner-score" type="number" min="0" value="1" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="loser-select">Equipo perdedor</label>
+          <select id="loser-select"></select>
+        </div>
+        <div>
+          <label for="loser-score">Goles</label>
+          <input id="loser-score" type="number" min="0" value="0" />
+        </div>
+      </div>
+
+      <label for="cronista-select">Cronista que narra</label>
+      <select id="cronista-select">
+        <option value="closs">Mariano Closs (técnico)</option>
+        <option value="martinoli">Christian Martinoli (irreverente)</option>
+        <option value="tapia">Luis Omar Tapia (poético)</option>
+        <option value="palomo">Fernando Palomo (analítico)</option>
+        <option value="bermudez">Perro Bermúdez (clásico)</option>
+      </select>
+
+      <label for="extra-input">Contexto extra (opcional)</label>
+      <input id="extra-input" type="text" placeholder='ej: "gol al 90+5", "penales 5-4"' />
+
+      <label class="checkbox-row" style="margin-top: 16px;">
+        <input id="broadcast-cb" type="checkbox" checked />
+        <span>📲 Enviar narración al WhatsApp del grupo</span>
+      </label>
+
+      <div style="margin-top: 18px; display: grid; gap: 10px;">
+        <button class="btn" id="submit-btn" onclick="submitMatch()">⚽ Registrar partido</button>
+        <button class="btn secondary" onclick="resetAuth()">Cambiar rifa</button>
+      </div>
+
+      <div class="err" id="match-err"></div>
+      <div class="result" id="result-box" style="display:none;"></div>
+    </div>
+
+    <p class="small-muted" style="text-align:center; margin-top: 20px;">
+      <a href="rifa-mundial.html">← Volver a la rifa</a>
+    </p>
+  </div>
+
+  <script>
+    var API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:8765/api/v1'
+      : 'https://api.vortexagents.ai/api/v1';
+
+    var currentSlug = '';
+    var currentCode = '';
+    var teamFlagMap = {};   // team_name → flag (for sending in match-event payload)
+
+    // Pre-fill slug from URL: rifa-match.html?r=orozco
+    var params = new URLSearchParams(location.search);
+    if (params.get('r')) document.getElementById('slug-input').value = params.get('r');
+
+    function showErr(elId, msg) {
+      document.getElementById(elId).textContent = msg || '';
+    }
+
+    async function loadRaffle() {
+      var slug = document.getElementById('slug-input').value.trim().toLowerCase();
+      var code = document.getElementById('code-input').value.trim();
+      if (!slug || !code) {
+        showErr('auth-err', 'Slug y código requeridos.');
+        return;
+      }
+      showErr('auth-err', '');
+      try {
+        var res = await fetch(API_BASE + '/agents/raffle_narrator/raffles/' + slug +
+                              '?access_code=' + encodeURIComponent(code));
+        if (!res.ok) {
+          showErr('auth-err', res.status === 403 ? 'Código incorrecto.' :
+                              res.status === 404 ? 'Rifa no encontrada.' : 'Error: HTTP ' + res.status);
+          return;
+        }
+        var data = await res.json();
+        if (!data.access_code) {
+          showErr('auth-err', 'Código incorrecto.');
+          return;
+        }
+        if (!data.assignments || data.assignments.length === 0) {
+          showErr('auth-err', 'Esta rifa no tiene equipos asignados todavía.');
+          return;
+        }
+        currentSlug = slug;
+        currentCode = code;
+        // Populate dropdowns with all 48 teams
+        var winnerSel = document.getElementById('winner-select');
+        var loserSel = document.getElementById('loser-select');
+        winnerSel.innerHTML = '';
+        loserSel.innerHTML = '';
+        teamFlagMap = {};
+        var sorted = data.assignments.slice().sort(function(a,b){
+          return (a.name || '').localeCompare(b.name || '');
+        });
+        sorted.forEach(function(a) {
+          teamFlagMap[a.name] = a.flag || '';
+          var label = (a.flag || '') + ' ' + a.name + '  (' + a.picker + ')';
+          [winnerSel, loserSel].forEach(function(sel) {
+            var opt = document.createElement('option');
+            opt.value = a.name;
+            opt.textContent = label;
+            sel.appendChild(opt);
+          });
+        });
+        // Default: winner = first, loser = second
+        if (loserSel.options.length > 1) loserSel.selectedIndex = 1;
+
+        document.getElementById('raffle-title').textContent = data.event_name;
+        document.getElementById('events-count').textContent =
+          (data.match_events_count || 0) + ' partidos registrados';
+        document.getElementById('auth-panel').style.display = 'none';
+        document.getElementById('match-panel').style.display = 'block';
+      } catch (e) {
+        showErr('auth-err', 'Error de red: ' + e.message);
+      }
+    }
+
+    function resetAuth() {
+      document.getElementById('match-panel').style.display = 'none';
+      document.getElementById('auth-panel').style.display = 'block';
+      document.getElementById('result-box').style.display = 'none';
+      currentSlug = '';
+      currentCode = '';
+    }
+
+    async function submitMatch() {
+      showErr('match-err', '');
+      var winner = document.getElementById('winner-select').value;
+      var loser = document.getElementById('loser-select').value;
+      if (winner === loser) {
+        showErr('match-err', 'Ganador y perdedor deben ser distintos.');
+        return;
+      }
+      var btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Enviando…';
+
+      var payload = {
+        access_code: currentCode,
+        winner: winner,
+        winner_flag: teamFlagMap[winner] || '',
+        loser: loser,
+        loser_flag: teamFlagMap[loser] || '',
+        score_w: parseInt(document.getElementById('winner-score').value || '0', 10),
+        score_l: parseInt(document.getElementById('loser-score').value || '0', 10),
+        stage: document.getElementById('stage-select').value,
+        cronista_id: document.getElementById('cronista-select').value,
+        extra_context: document.getElementById('extra-input').value.trim(),
+        broadcast_to_group: document.getElementById('broadcast-cb').checked,
+        record_event: true,
+      };
+
+      try {
+        var res = await fetch(API_BASE + '/agents/raffle_narrator/raffles/' + currentSlug + '/match-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          var err = await res.text();
+          showErr('match-err', 'HTTP ' + res.status + ': ' + err.slice(0, 200));
+          return;
+        }
+        var data = await res.json();
+        var box = document.getElementById('result-box');
+        var lines = [
+          '✅ Partido registrado',
+          '',
+          data.text,
+          '',
+          '📲 WhatsApp: ' + (data.whatsapp_sent ? 'enviado al grupo' :
+                            (data.whatsapp_error ? 'falló (' + data.whatsapp_error + ')' : 'no se envió')),
+          '👥 Afectados: ' + (data.affected_pickers.join(', ') || '(ninguno en la rifa)'),
+          '💰 Costo: $' + (data.cost_usd || 0).toFixed(4) + ' USD',
+        ];
+        box.textContent = lines.join('\n');
+        box.style.display = 'block';
+        // Bump events count
+        var ec = document.getElementById('events-count');
+        var n = parseInt((ec.textContent.match(/\d+/) || [0])[0], 10) + 1;
+        ec.textContent = n + ' partidos registrados';
+      } catch (e) {
+        showErr('match-err', 'Error de red: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '⚽ Registrar partido';
+      }
+    }
+  </script>
+</body>
+</html>
