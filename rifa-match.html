@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registrar partido · Rifa Mundial 2026</title>
+  <title>Registrar partido Mundial · Vortex AI</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚽%3C/text%3E%3C/svg%3E" />
   <style>
     :root {
-      --bg: #0a0a0a;
-      --green: #00e87b;
-      --text: #f3f7f4;
-      --muted: #8a9189;
-      --panel: rgba(255,255,255,0.04);
-      --border: rgba(0, 232, 123, 0.18);
+      --bg: #0a0a0a; --green: #00e87b; --text: #f3f7f4; --muted: #8a9189;
+      --panel: rgba(255,255,255,0.04); --border: rgba(0, 232, 123, 0.18);
       --border-soft: rgba(255,255,255,0.08);
     }
     * { box-sizing: border-box; }
@@ -22,12 +18,11 @@
       background: radial-gradient(ellipse 1000px 500px at 50% -100px, rgba(0,232,123,0.10), transparent 70%), var(--bg);
       color: var(--text);
       font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
     }
     .container { max-width: 540px; margin: 0 auto; padding: 24px 16px 60px; }
-    h1 { font-family: 'Bebas Neue', system-ui, sans-serif; font-size: 36px; letter-spacing: 0.04em; margin: 0 0 4px; text-shadow: 0 0 16px rgba(0,232,123,0.4); }
-    .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    h1 { font-family: 'Bebas Neue', system-ui, sans-serif; font-size: 32px; letter-spacing: 0.04em; margin: 0 0 4px; text-shadow: 0 0 16px rgba(0,232,123,0.4); }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
     label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 700; margin: 14px 0 6px; }
     input, select {
       width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-soft);
@@ -35,7 +30,7 @@
       outline: none;
     }
     input:focus, select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,232,123,0.10); }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
     .panel {
       background: var(--panel); border: 1px solid var(--border-soft);
       border-radius: 14px; padding: 18px; margin-bottom: 16px;
@@ -45,11 +40,8 @@
       background: var(--green); color: #001b0b; border: none; border-radius: 12px;
       padding: 14px 22px; font-family: inherit; font-weight: 800; font-size: 15px;
       letter-spacing: 0.04em; cursor: pointer; text-transform: uppercase;
-      transition: transform .12s, box-shadow .15s;
-      box-shadow: 0 6px 20px rgba(0,232,123,0.25);
-      width: 100%;
+      box-shadow: 0 6px 20px rgba(0,232,123,0.25); width: 100%;
     }
-    .btn:hover:not(:disabled) { transform: translateY(-1px); }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border-soft); box-shadow: none; }
     .checkbox-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(0,232,123,0.04); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
@@ -61,67 +53,57 @@
       background: rgba(0,232,123,0.08); border: 1px solid var(--border);
       white-space: pre-wrap; font-size: 14px; line-height: 1.5;
     }
-    .badge {
-      display: inline-block; padding: 3px 9px; border-radius: 999px;
-      background: rgba(0,232,123,0.15); color: var(--green); font-size: 11px;
-      font-weight: 700; letter-spacing: 0.06em;
-    }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 999px;
+      background: rgba(0,232,123,0.15); color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; }
     a { color: var(--green); }
+    .mode-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+    .mode-tabs button {
+      flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border-soft);
+      color: var(--muted); padding: 10px; border-radius: 10px; cursor: pointer;
+      font-family: inherit; font-size: 13px; font-weight: 700;
+    }
+    .mode-tabs button.active { background: rgba(0,232,123,0.10); border-color: var(--green); color: var(--green); }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>⚽ REGISTRAR PARTIDO</h1>
-    <p class="sub">Dispara una narración personalizada al grupo cuando termine un partido del Mundial.</p>
+    <h1>⚽ REGISTRAR PARTIDO MUNDIAL</h1>
+    <p class="sub">Un solo registro → todas las rifas activas se actualizan + narran al grupo.</p>
 
-    <!-- Step 1: load raffle -->
-    <div class="panel accent" id="auth-panel">
-      <label for="slug-input">Slug de la rifa</label>
-      <input id="slug-input" type="text" placeholder="orozco" autocapitalize="off" autocorrect="off" spellcheck="false" />
-      <label for="code-input">Código de acceso</label>
-      <input id="code-input" type="password" placeholder="código" />
-      <div style="margin-top: 14px;">
-        <button class="btn" onclick="loadRaffle()">Cargar rifa</button>
-      </div>
-      <div class="err" id="auth-err"></div>
+    <div class="mode-tabs">
+      <button id="tab-mundial" class="active" onclick="switchMode('mundial')">🌍 Modo Mundial (todas las rifas)</button>
+      <button id="tab-single" onclick="switchMode('single')">🏠 Una rifa específica</button>
     </div>
 
-    <!-- Step 2: match form (hidden until raffle loaded) -->
-    <div class="panel" id="match-panel" style="display:none;">
-      <div style="display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-        <strong id="raffle-title"></strong>
-        <span class="badge" id="events-count"></span>
+    <div class="panel accent" id="form-panel">
+      <label for="code-input">Código admin</label>
+      <input id="code-input" type="password" placeholder="Mismo código de la rifa familiar" />
+
+      <div id="slug-row" style="display:none;">
+        <label for="slug-input">Slug de la rifa específica</label>
+        <input id="slug-input" type="text" placeholder="orozco" autocapitalize="off" />
       </div>
 
       <label for="stage-select">Fase</label>
       <select id="stage-select">
+        <option value="16avos">🎟️ 16avos (Round of 32)</option>
         <option value="octavos">🔥 Octavos</option>
         <option value="cuartos">⚡ Cuartos</option>
         <option value="semis">🥉 Semifinales</option>
         <option value="final">🏆 Final</option>
-        <option value="grupos">Grupos</option>
+        <option value="tercer-lugar">🥉 Tercer lugar</option>
       </select>
 
+      <label for="winner-select">Equipo ganador</label>
       <div class="row">
-        <div>
-          <label for="winner-select">Equipo ganador</label>
-          <select id="winner-select"></select>
-        </div>
-        <div>
-          <label for="winner-score">Goles</label>
-          <input id="winner-score" type="number" min="0" value="1" />
-        </div>
+        <select id="winner-select"></select>
+        <input id="winner-score" type="number" min="0" value="1" placeholder="goles" />
       </div>
 
+      <label for="loser-select">Equipo perdedor</label>
       <div class="row">
-        <div>
-          <label for="loser-select">Equipo perdedor</label>
-          <select id="loser-select"></select>
-        </div>
-        <div>
-          <label for="loser-score">Goles</label>
-          <input id="loser-score" type="number" min="0" value="0" />
-        </div>
+        <select id="loser-select"></select>
+        <input id="loser-score" type="number" min="0" value="0" placeholder="goles" />
       </div>
 
       <label for="cronista-select">Cronista que narra</label>
@@ -138,12 +120,11 @@
 
       <label class="checkbox-row" style="margin-top: 16px;">
         <input id="broadcast-cb" type="checkbox" checked />
-        <span>📲 Enviar narración al WhatsApp del grupo</span>
+        <span id="broadcast-label">📲 Enviar narración a TODAS las rifas (cada una a su WhatsApp)</span>
       </label>
 
-      <div style="margin-top: 18px; display: grid; gap: 10px;">
+      <div style="margin-top: 18px;">
         <button class="btn" id="submit-btn" onclick="submitMatch()">⚽ Registrar partido</button>
-        <button class="btn secondary" onclick="resetAuth()">Cambiar rifa</button>
       </div>
 
       <div class="err" id="match-err"></div>
@@ -151,6 +132,7 @@
     </div>
 
     <p class="small-muted" style="text-align:center; margin-top: 20px;">
+      <a href="rifa-qualify.html">Registrar los 32 clasificados a 16avos →</a><br>
       <a href="rifa-mundial.html">← Volver a la rifa</a>
     </p>
   </div>
@@ -159,147 +141,139 @@
     var API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
       ? 'http://localhost:8765/api/v1'
       : 'https://api.vortexagents.ai/api/v1';
+    var mode = 'mundial';   // 'mundial' or 'single'
 
-    var currentSlug = '';
-    var currentCode = '';
-    var teamFlagMap = {};   // team_name → flag (for sending in match-event payload)
+    // The 48 Mundial 2026 teams (hardcoded, same source of truth as the React component)
+    var TEAMS = [
+      // Tier 1
+      ['🇪🇸','España'],['🇦🇷','Argentina'],['🇫🇷','Francia'],['🇧🇷','Brasil'],
+      ['🏴󠁧󠁢󠁥󠁮󠁧󠁿','Inglaterra'],['🇩🇪','Alemania'],['🇵🇹','Portugal'],['🇳🇱','Países Bajos'],
+      ['🇧🇪','Bélgica'],['🇺🇾','Uruguay'],['🇲🇦','Marruecos'],['🇯🇵','Japón'],
+      ['🇨🇴','Colombia'],['🇲🇽','México'],['🇺🇸','USA'],['🇳🇴','Noruega'],
+      // Tier 2
+      ['🇭🇷','Croacia'],['🇨🇭','Suiza'],['🇸🇳','Senegal'],['🇨🇮','Costa de Marfil'],
+      ['🇪🇬','Egipto'],['🇦🇺','Australia'],['🇹🇷','Turquía'],['🇦🇹','Austria'],
+      ['🇨🇿','Chequia'],['🇸🇪','Suecia'],['🇧🇦','Bosnia y Herzegovina'],
+      ['🏴󠁧󠁢󠁳󠁣󠁴󠁿','Escocia'],['🇪🇨','Ecuador'],['🇵🇾','Paraguay'],['🇰🇷','Corea del Sur'],['🇮🇷','Irán'],
+      // Tier 3
+      ['🇬🇭','Ghana'],['🇹🇳','Túnez'],['🇸🇦','Arabia Saudita'],['🇩🇿','Argelia'],
+      ['🇨🇩','Congo DR'],['🇨🇻','Cabo Verde'],['🇨🇦','Canadá'],['🇵🇦','Panamá'],
+      ['🇭🇹','Haití'],['🇨🇼','Curazao'],['🇿🇦','Sudáfrica'],['🇮🇶','Irak'],
+      ['🇯🇴','Jordania'],['🇺🇿','Uzbekistán'],['🇳🇿','Nueva Zelanda'],['🇶🇦','Qatar'],
+    ];
+    var TEAM_FLAG = {};
+    TEAMS.forEach(function(t){ TEAM_FLAG[t[1]] = t[0]; });
 
-    // Pre-fill slug from URL: rifa-match.html?r=orozco
+    function populateTeamDropdowns() {
+      var w = document.getElementById('winner-select');
+      var l = document.getElementById('loser-select');
+      w.innerHTML = ''; l.innerHTML = '';
+      var sorted = TEAMS.slice().sort(function(a,b){ return a[1].localeCompare(b[1]); });
+      sorted.forEach(function(t) {
+        var label = t[0] + ' ' + t[1];
+        [w, l].forEach(function(sel) {
+          var opt = document.createElement('option');
+          opt.value = t[1];
+          opt.textContent = label;
+          sel.appendChild(opt);
+        });
+      });
+      if (l.options.length > 1) l.selectedIndex = 1;
+    }
+    populateTeamDropdowns();
+
+    // Pre-fill slug if in URL
     var params = new URLSearchParams(location.search);
-    if (params.get('r')) document.getElementById('slug-input').value = params.get('r');
-
-    function showErr(elId, msg) {
-      document.getElementById(elId).textContent = msg || '';
+    if (params.get('r')) {
+      document.getElementById('slug-input').value = params.get('r');
+      switchMode('single');
     }
 
-    async function loadRaffle() {
-      var slug = document.getElementById('slug-input').value.trim().toLowerCase();
-      var code = document.getElementById('code-input').value.trim();
-      if (!slug || !code) {
-        showErr('auth-err', 'Slug y código requeridos.');
-        return;
-      }
-      showErr('auth-err', '');
-      try {
-        var res = await fetch(API_BASE + '/agents/raffle_narrator/raffles/' + slug +
-                              '?access_code=' + encodeURIComponent(code));
-        if (!res.ok) {
-          showErr('auth-err', res.status === 403 ? 'Código incorrecto.' :
-                              res.status === 404 ? 'Rifa no encontrada.' : 'Error: HTTP ' + res.status);
-          return;
-        }
-        var data = await res.json();
-        if (!data.access_code) {
-          showErr('auth-err', 'Código incorrecto.');
-          return;
-        }
-        if (!data.assignments || data.assignments.length === 0) {
-          showErr('auth-err', 'Esta rifa no tiene equipos asignados todavía.');
-          return;
-        }
-        currentSlug = slug;
-        currentCode = code;
-        // Populate dropdowns with all 48 teams
-        var winnerSel = document.getElementById('winner-select');
-        var loserSel = document.getElementById('loser-select');
-        winnerSel.innerHTML = '';
-        loserSel.innerHTML = '';
-        teamFlagMap = {};
-        var sorted = data.assignments.slice().sort(function(a,b){
-          return (a.name || '').localeCompare(b.name || '');
-        });
-        sorted.forEach(function(a) {
-          teamFlagMap[a.name] = a.flag || '';
-          var label = (a.flag || '') + ' ' + a.name + '  (' + a.picker + ')';
-          [winnerSel, loserSel].forEach(function(sel) {
-            var opt = document.createElement('option');
-            opt.value = a.name;
-            opt.textContent = label;
-            sel.appendChild(opt);
-          });
-        });
-        // Default: winner = first, loser = second
-        if (loserSel.options.length > 1) loserSel.selectedIndex = 1;
-
-        document.getElementById('raffle-title').textContent = data.event_name;
-        document.getElementById('events-count').textContent =
-          (data.match_events_count || 0) + ' partidos registrados';
-        document.getElementById('auth-panel').style.display = 'none';
-        document.getElementById('match-panel').style.display = 'block';
-      } catch (e) {
-        showErr('auth-err', 'Error de red: ' + e.message);
-      }
+    function switchMode(m) {
+      mode = m;
+      document.getElementById('tab-mundial').classList.toggle('active', m === 'mundial');
+      document.getElementById('tab-single').classList.toggle('active', m === 'single');
+      document.getElementById('slug-row').style.display = (m === 'single') ? 'block' : 'none';
+      document.getElementById('broadcast-label').textContent = (m === 'mundial')
+        ? '📲 Enviar narración a TODAS las rifas (cada una a su WhatsApp)'
+        : '📲 Enviar narración al WhatsApp de esta rifa';
     }
 
-    function resetAuth() {
-      document.getElementById('match-panel').style.display = 'none';
-      document.getElementById('auth-panel').style.display = 'block';
-      document.getElementById('result-box').style.display = 'none';
-      currentSlug = '';
-      currentCode = '';
-    }
+    function showErr(msg) { document.getElementById('match-err').textContent = msg || ''; }
 
     async function submitMatch() {
-      showErr('match-err', '');
+      showErr('');
+      var code = document.getElementById('code-input').value.trim();
+      if (!code) { showErr('Código requerido.'); return; }
       var winner = document.getElementById('winner-select').value;
       var loser = document.getElementById('loser-select').value;
-      if (winner === loser) {
-        showErr('match-err', 'Ganador y perdedor deben ser distintos.');
-        return;
-      }
+      if (winner === loser) { showErr('Ganador y perdedor deben ser distintos.'); return; }
       var btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Enviando…';
+      btn.disabled = true; btn.textContent = 'Enviando…';
 
-      var payload = {
-        access_code: currentCode,
-        winner: winner,
-        winner_flag: teamFlagMap[winner] || '',
-        loser: loser,
-        loser_flag: teamFlagMap[loser] || '',
+      var commonBody = {
+        winner: winner, winner_flag: TEAM_FLAG[winner] || '',
+        loser: loser, loser_flag: TEAM_FLAG[loser] || '',
         score_w: parseInt(document.getElementById('winner-score').value || '0', 10),
         score_l: parseInt(document.getElementById('loser-score').value || '0', 10),
         stage: document.getElementById('stage-select').value,
         cronista_id: document.getElementById('cronista-select').value,
         extra_context: document.getElementById('extra-input').value.trim(),
-        broadcast_to_group: document.getElementById('broadcast-cb').checked,
-        record_event: true,
       };
 
       try {
-        var res = await fetch(API_BASE + '/agents/raffle_narrator/raffles/' + currentSlug + '/match-event', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) {
-          var err = await res.text();
-          showErr('match-err', 'HTTP ' + res.status + ': ' + err.slice(0, 200));
-          return;
+        var res, data;
+        if (mode === 'mundial') {
+          res = await fetch(API_BASE + '/mundial/match', {
+            method: 'POST', headers: { 'Content-Type':'application/json' },
+            body: JSON.stringify(Object.assign({
+              admin_code: code,
+              broadcast_to_raffles: document.getElementById('broadcast-cb').checked,
+            }, commonBody)),
+          });
+        } else {
+          var slug = document.getElementById('slug-input').value.trim().toLowerCase();
+          if (!slug) { showErr('Slug requerido en modo rifa específica.'); btn.disabled=false; btn.textContent='⚽ Registrar partido'; return; }
+          res = await fetch(API_BASE + '/agents/raffle_narrator/raffles/' + slug + '/match-event', {
+            method: 'POST', headers: { 'Content-Type':'application/json' },
+            body: JSON.stringify(Object.assign({
+              access_code: code,
+              broadcast_to_group: document.getElementById('broadcast-cb').checked,
+              record_event: true,
+            }, commonBody)),
+          });
         }
-        var data = await res.json();
+        if (!res.ok) { var t = await res.text(); showErr('HTTP ' + res.status + ': ' + t.slice(0,200)); return; }
+        data = await res.json();
         var box = document.getElementById('result-box');
-        var lines = [
-          '✅ Partido registrado',
-          '',
-          data.text,
-          '',
-          '📲 WhatsApp: ' + (data.whatsapp_sent ? 'enviado al grupo' :
-                            (data.whatsapp_error ? 'falló (' + data.whatsapp_error + ')' : 'no se envió')),
-          '👥 Afectados: ' + (data.affected_pickers.join(', ') || '(ninguno en la rifa)'),
-          '💰 Costo: $' + (data.cost_usd || 0).toFixed(4) + ' USD',
-        ];
+        var lines;
+        if (mode === 'mundial') {
+          lines = [
+            '✅ Partido registrado globalmente',
+            '',
+            '📲 Rifas notificadas: ' + (data.raffles_notified.length || 0),
+            data.raffles_notified.length ? '   ' + data.raffles_notified.join(', ') : '',
+            '⚠ Fallos: ' + (data.notifications_failed || 0),
+            '💰 Costo LLM total: $' + (data.total_cost_usd || 0).toFixed(4),
+            '🆔 Event ID: ' + data.event_id,
+          ].filter(Boolean);
+        } else {
+          lines = [
+            '✅ Partido registrado en esta rifa',
+            '',
+            data.text || '',
+            '',
+            '📲 WhatsApp: ' + (data.whatsapp_sent ? 'enviado' : (data.whatsapp_error || 'no se envió')),
+            '👥 Afectados: ' + (data.affected_pickers ? data.affected_pickers.join(', ') : '—'),
+            '💰 Costo: $' + (data.cost_usd || 0).toFixed(4),
+          ];
+        }
         box.textContent = lines.join('\n');
         box.style.display = 'block';
-        // Bump events count
-        var ec = document.getElementById('events-count');
-        var n = parseInt((ec.textContent.match(/\d+/) || [0])[0], 10) + 1;
-        ec.textContent = n + ' partidos registrados';
       } catch (e) {
-        showErr('match-err', 'Error de red: ' + e.message);
+        showErr('Error de red: ' + e.message);
       } finally {
-        btn.disabled = false;
-        btn.textContent = '⚽ Registrar partido';
+        btn.disabled = false; btn.textContent = '⚽ Registrar partido';
       }
     }
   </script>

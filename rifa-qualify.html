@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clasificados a octavos · Mundial 2026</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏁%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #0a0a0a; --green: #00e87b; --text: #f3f7f4; --muted: #8a9189;
+      --panel: rgba(255,255,255,0.04); --border: rgba(0, 232, 123, 0.18);
+      --border-soft: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: radial-gradient(ellipse 1000px 500px at 50% -100px, rgba(0,232,123,0.10), transparent 70%), var(--bg);
+      color: var(--text);
+      font-family: 'Inter Tight', system-ui, -apple-system, sans-serif;
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 620px; margin: 0 auto; padding: 24px 16px 60px; }
+    h1 { font-family: 'Bebas Neue', system-ui, sans-serif; font-size: 32px; letter-spacing: 0.04em; margin: 0 0 4px; text-shadow: 0 0 16px rgba(0,232,123,0.4); }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+    label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 700; margin: 14px 0 6px; }
+    input, textarea, select {
+      width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-soft);
+      border-radius: 10px; color: var(--text); padding: 12px 14px; font-size: 16px; font-family: inherit;
+      outline: none;
+    }
+    textarea { min-height: 360px; font-family: 'SF Mono', Menlo, monospace; font-size: 13px; line-height: 1.6; }
+    input:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,232,123,0.10); }
+    .panel { background: var(--panel); border: 1px solid var(--border-soft); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+    .panel.accent { border-color: var(--border); box-shadow: 0 6px 20px rgba(0,232,123,0.06); }
+    .btn {
+      background: var(--green); color: #001b0b; border: none; border-radius: 12px;
+      padding: 14px 22px; font-family: inherit; font-weight: 800; font-size: 15px;
+      letter-spacing: 0.04em; cursor: pointer; text-transform: uppercase;
+      box-shadow: 0 6px 20px rgba(0,232,123,0.25); width: 100%;
+    }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .checkbox-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(0,232,123,0.04); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+    .checkbox-row input { width: auto; }
+    .small-muted { color: var(--muted); font-size: 12px; }
+    .err { color: #ff7a7a; font-size: 13px; margin-top: 8px; min-height: 18px; }
+    .result {
+      margin-top: 18px; padding: 16px; border-radius: 12px;
+      background: rgba(0,232,123,0.08); border: 1px solid var(--border);
+      white-space: pre-wrap; font-size: 14px; line-height: 1.5;
+    }
+    .count-pill { display: inline-block; padding: 4px 12px; border-radius: 999px; background: rgba(0,232,123,0.10); color: var(--green); font-weight: 700; font-size: 12px; letter-spacing: 0.04em; }
+    a { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏁 CLASIFICADOS A 16AVOS</h1>
+    <p class="sub">
+      Al terminar la fase de grupos del Mundial 2026, registra los <strong>32 equipos</strong> que pasaron
+      a 16avos de final (Round of 32). Cada rifa activa recibirá un mensaje al WhatsApp listando
+      qué equipos de <i>sus</i> participantes clasificaron.<br>
+      <strong>Idempotente:</strong> equipos ya registrados se ignoran (puedes correr esto varias veces).
+    </p>
+
+    <div class="panel accent">
+      <label for="code-input">Código admin</label>
+      <input id="code-input" type="password" placeholder="Mismo código de la rifa" />
+
+      <label for="teams-input">Equipos clasificados (uno por línea, formato: <code>Nombre</code> o <code>Nombre: A1</code>)</label>
+      <textarea id="teams-input" placeholder="México: A1
+Sudáfrica: A2
+Canadá: B1
+Suiza: B2
+Brasil: C1
+Marruecos: C2
+USA: D1
+Australia: D2
+Alemania: E1
+Ecuador: E2
+Países Bajos: F1
+Japón: F2
+Bélgica: G1
+Egipto: G2
+España: H1
+Uruguay: H2"></textarea>
+      <p class="small-muted" style="margin-top:4px;">
+        El sufijo "<code>: A1</code>" indica grupo + posición (opcional, solo informativo).
+        <span class="count-pill" id="count-pill">0 detectados</span>
+      </p>
+
+      <label class="checkbox-row" style="margin-top: 16px;">
+        <input id="broadcast-cb" type="checkbox" checked />
+        <span>📲 Notificar a cada rifa qué equipos suyos pasaron</span>
+      </label>
+
+      <div style="margin-top: 18px;">
+        <button class="btn" id="submit-btn" onclick="submitTeams()">🏁 Registrar clasificados</button>
+      </div>
+
+      <div class="err" id="err-box"></div>
+      <div class="result" id="result-box" style="display:none;"></div>
+    </div>
+
+    <p class="small-muted" style="text-align:center; margin-top: 20px;">
+      <a href="rifa-match.html">← Registrar partido (octavos+)</a><br>
+      <a href="rifa-mundial.html">Ver rifa</a>
+    </p>
+  </div>
+
+  <script>
+    var API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:8765/api/v1'
+      : 'https://api.vortexagents.ai/api/v1';
+
+    // Flag map for the 48 Mundial teams (matches our React component)
+    var TEAM_FLAG = {
+      'España':'🇪🇸','Argentina':'🇦🇷','Francia':'🇫🇷','Brasil':'🇧🇷','Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+      'Alemania':'🇩🇪','Portugal':'🇵🇹','Países Bajos':'🇳🇱','Bélgica':'🇧🇪','Uruguay':'🇺🇾',
+      'Marruecos':'🇲🇦','Japón':'🇯🇵','Colombia':'🇨🇴','México':'🇲🇽','USA':'🇺🇸','Noruega':'🇳🇴',
+      'Croacia':'🇭🇷','Suiza':'🇨🇭','Senegal':'🇸🇳','Costa de Marfil':'🇨🇮','Egipto':'🇪🇬',
+      'Australia':'🇦🇺','Turquía':'🇹🇷','Austria':'🇦🇹','Chequia':'🇨🇿','Suecia':'🇸🇪',
+      'Bosnia y Herzegovina':'🇧🇦','Escocia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Ecuador':'🇪🇨','Paraguay':'🇵🇾',
+      'Corea del Sur':'🇰🇷','Irán':'🇮🇷','Ghana':'🇬🇭','Túnez':'🇹🇳','Arabia Saudita':'🇸🇦',
+      'Argelia':'🇩🇿','Congo DR':'🇨🇩','Cabo Verde':'🇨🇻','Canadá':'🇨🇦','Panamá':'🇵🇦',
+      'Haití':'🇭🇹','Curazao':'🇨🇼','Sudáfrica':'🇿🇦','Irak':'🇮🇶','Jordania':'🇯🇴',
+      'Uzbekistán':'🇺🇿','Nueva Zelanda':'🇳🇿','Qatar':'🇶🇦',
+    };
+
+    function parseTeams() {
+      var raw = document.getElementById('teams-input').value;
+      var out = [];
+      raw.split('\n').forEach(function(line) {
+        line = line.trim();
+        if (!line) return;
+        var name, gl = '', gp = 0;
+        if (line.indexOf(':') >= 0) {
+          var parts = line.split(':');
+          name = parts[0].trim();
+          var grp = (parts[1] || '').trim();
+          if (grp.length >= 2) {
+            gl = grp.charAt(0).toUpperCase();
+            gp = parseInt(grp.charAt(1), 10) || 0;
+          }
+        } else {
+          name = line;
+        }
+        if (name) out.push({ name: name, flag: TEAM_FLAG[name] || '', group_letter: gl, group_position: gp });
+      });
+      return out;
+    }
+
+    function updateCount() {
+      var teams = parseTeams();
+      var unknown = teams.filter(function(t){ return !t.flag; }).map(function(t){return t.name;});
+      var pill = document.getElementById('count-pill');
+      pill.textContent = teams.length + ' detectados' + (unknown.length ? '  ·  ⚠ desconocidos: ' + unknown.join(', ') : '');
+    }
+    document.getElementById('teams-input').addEventListener('input', updateCount);
+    updateCount();
+
+    function showErr(msg) { document.getElementById('err-box').textContent = msg || ''; }
+
+    async function submitTeams() {
+      showErr('');
+      var code = document.getElementById('code-input').value.trim();
+      if (!code) { showErr('Código requerido.'); return; }
+      var teams = parseTeams();
+      if (teams.length < 1) { showErr('Necesitas al menos 1 equipo.'); return; }
+      if (teams.length > 32) { showErr('Máximo 32 equipos (los que pasan a 16avos en Mundial 2026).'); return; }
+      var btn = document.getElementById('submit-btn');
+      btn.disabled = true; btn.textContent = 'Enviando…';
+      try {
+        var res = await fetch(API_BASE + '/mundial/qualify-to-16avos', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            admin_code: code,
+            broadcast_to_raffles: document.getElementById('broadcast-cb').checked,
+            teams: teams,
+          }),
+        });
+        if (!res.ok) { var t = await res.text(); showErr('HTTP ' + res.status + ': ' + t.slice(0,200)); return; }
+        var data = await res.json();
+        var box = document.getElementById('result-box');
+        box.textContent = [
+          '✅ Clasificados registrados',
+          '',
+          '🆕 Nuevos: ' + data.registered,
+          '⏭ Ya existían: ' + data.skipped_duplicates,
+          '📲 Rifas notificadas: ' + data.raffles_notified.length,
+          data.raffles_notified.length ? '   ' + data.raffles_notified.join(', ') : '',
+        ].filter(Boolean).join('\n');
+        box.style.display = 'block';
+      } catch (e) {
+        showErr('Error de red: ' + e.message);
+      } finally {
+        btn.disabled = false; btn.textContent = '🏁 Registrar clasificados';
+      }
+    }
+  </script>
+</body>
+</html>
