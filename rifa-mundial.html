@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mundial 2026 — La Rifa Familiar | Vortex AI Agents</title>
+  <meta name="description" content="Sorteo familiar de los 48 equipos del Mundial 2026 con narración de Closs y Martinoli en vivo." />
+
+  <!-- Unlisted page: don't index -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mundial 2026 — La Rifa Familiar" />
+  <meta property="og:description" content="¿Quién se lleva el trofeo?" />
+  <meta property="og:type" content="website" />
+
+  <!-- Favicon: reuse site favicon if present, else inline trophy -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏆%3C/text%3E%3C/svg%3E" />
+
+  <style>
+    /* Reset minimal — the React component owns its own styles inside .wcr-root */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #f3f7f4;
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    #rifa-root { min-height: 100vh; }
+
+    /* Loading fallback shown until the JS bundle hydrates */
+    .rifa-boot {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px;
+      background: radial-gradient(ellipse 1200px 600px at 50% -100px, rgba(0,232,123,0.10), transparent 70%), #0a0a0a;
+      color: #00e87b;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 700;
+      transition: opacity .3s;
+    }
+    .rifa-boot.hidden { opacity: 0; pointer-events: none; }
+    .rifa-boot-ball {
+      font-size: 48px;
+      animation: rifa-spin 1.4s linear infinite;
+      filter: drop-shadow(0 0 16px rgba(0,232,123,0.6));
+    }
+    @keyframes rifa-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Initial paint: loader, replaced by React mount -->
+  <div id="rifa-root">
+    <div class="rifa-boot" id="rifa-boot">
+      <div class="rifa-boot-ball">⚽</div>
+      <div>Cargando rifa…</div>
+    </div>
+  </div>
+
+  <script>
+    // Runtime config — auto-detects localhost so the same HTML works in dev + prod.
+    var _isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    window.__RIFA_API_BASE__ = _isLocal
+      ? 'http://localhost:8765/api/v1'
+      : 'https://api.vortexagents.ai/api/v1';
+    window.__RIFA_ACCESS_CODE__ = 'mundial2026';
+  </script>
+
+  <!-- Bundle: includes React + ReactDOM + the WorldCupRaffle2026 component. -->
+  <script defer src="js/rifa-mundial.bundle.js?v=7"></script>
+
+  <script>
+    // Hide loader once React renders. Bundle uses createRoot which mounts synchronously
+    // after script execution; we hide on DOMContentLoaded as a safety net.
+    window.addEventListener('load', function () {
+      var boot = document.getElementById('rifa-boot');
+      if (boot) {
+        setTimeout(function () { boot.classList.add('hidden'); }, 300);
+        setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 800);
+      }
+    });
+  </script>
+</body>
+</html>
