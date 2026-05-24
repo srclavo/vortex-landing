@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rifa Debug</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <style>
+    body { background:#0a0a0a; color:#f3f7f4; font-family: monospace; padding: 20px; line-height: 1.6; }
+    .ok { color: #00e87b; }
+    .err { color: #ff7a7a; }
+    pre { background: #111; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+    button { background: #00e87b; color: #001b0b; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 6px; }
+    input { background: #111; color: #fff; border: 1px solid #333; padding: 8px; border-radius: 4px; font-family: inherit; }
+  </style>
+</head>
+<body>
+  <h1>🔬 Debug — Rifa Orozco</h1>
+  <p>Esta página llama al backend directo sin React. Si funciona aquí, el bug es del bundle React.</p>
+  <p>
+    Código: <input id="code" type="password" value="mundial2026" />
+    <button onclick="run()">Probar</button>
+  </p>
+  <div id="out"></div>
+  <script>
+    var API = location.hostname === 'localhost' ? 'http://localhost:8765/api/v1' : 'https://api.vortexagents.ai/api/v1';
+    async function run() {
+      var code = document.getElementById('code').value.trim();
+      var out = document.getElementById('out');
+      out.innerHTML = '⏳ Llamando ' + API + '/agents/raffle_narrator/raffles/orozco?access_code=' + code + ' ...';
+      var t0 = performance.now();
+      try {
+        var res = await fetch(API + '/agents/raffle_narrator/raffles/orozco?access_code=' + encodeURIComponent(code));
+        var dt = Math.round(performance.now() - t0);
+        var data = await res.json();
+        var hasAC = !!data.access_code;
+        var nAssign = (data.assignments || []).length;
+        var nPart = (data.participants || []).length;
+        var html = '';
+        html += '<p class="' + (res.ok ? 'ok' : 'err') + '">HTTP ' + res.status + ' · ' + dt + 'ms</p>';
+        html += '<p>access_code en response: <span class="' + (hasAC ? 'ok' : 'err') + '">' + (hasAC ? '✓ ' + data.access_code : '✗ ausente (código mal)') + '</span></p>';
+        html += '<p>participants: <span class="' + (nPart > 0 ? 'ok' : 'err') + '">' + nPart + '</span></p>';
+        html += '<p>assignments: <span class="' + (nAssign > 0 ? 'ok' : 'err') + '">' + nAssign + '</span></p>';
+        html += '<p>event_name: ' + (data.event_name || '(vacío)') + '</p>';
+        html += '<p>whatsapp_target: ' + data.whatsapp_target_type + ' → ' + (data.whatsapp_target_value || '(vacío)') + '</p>';
+        if (nAssign > 0) {
+          html += '<p>Primer assignment:</p><pre>' + JSON.stringify(data.assignments[0], null, 2) + '</pre>';
+          // Group by picker
+          var byPicker = {};
+          data.assignments.forEach(function(a) {
+            byPicker[a.picker] = byPicker[a.picker] || [];
+            byPicker[a.picker].push(a.flag + ' ' + a.name + ' (T' + a.tier + ')');
+          });
+          html += '<h3>Paquetes:</h3>';
+          Object.keys(byPicker).sort().forEach(function(p) {
+            html += '<p><strong>' + p + '</strong> (' + byPicker[p].length + '):<br>' + byPicker[p].join(', ') + '</p>';
+          });
+        }
+        out.innerHTML = html;
+      } catch (e) {
+        out.innerHTML = '<p class="err">Error: ' + e.message + '</p>';
+      }
+    }
+    run();   // Run on load
+  </script>
+</body>
+</html>
