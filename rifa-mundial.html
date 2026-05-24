@@ -66,6 +66,12 @@
   </div>
 
   <script>
+    // Default raffle: if no query params, redirect to the Orozco family raffle.
+    // This avoids the confusing "blank setup screen" when users hit the bare URL.
+    if (!location.search) {
+      location.replace(location.pathname + '?r=orozco');
+    }
+
     // Runtime config — auto-detects localhost so the same HTML works in dev + prod.
     var _isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
     window.__RIFA_API_BASE__ = _isLocal
