@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vortex AI Agents — Demo de Cobranza Inteligente</title>
+<meta name="description" content="Demo interactivo del sistema de Key Levers para Cuentas por Cobrar. Sube tu Excel del ERP y visualiza aging, DSO, top deudores y cartera vencida en segundos.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://vortexagents.ai/cobranza-demo.html" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --void:    #080a0f;
+    --surface: #0d1117;
+    --border:  #1e1e30;
+    --green:   #00ff88;
+    --text:    #f0f4f8;
+    --muted:   #8b929e;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body:    'DM Sans', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--void);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow: hidden;
+  }
+
+  .topbar {
+    height: 56px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+  .brand-logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+  .brand-logo span { color: var(--green); }
+  .brand-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-left: 1px solid var(--border);
+    padding-left: 14px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .back-link {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--text); }
+  .privacy-pill {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    color: var(--green);
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    padding: 4px 9px;
+    border-radius: 99px;
+    text-transform: uppercase;
+  }
+
+  .iframe-wrap {
+    height: calc(100vh - 56px);
+    width: 100vw;
+    position: relative;
+    background: #fff;
+  }
+  .iframe-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  /* Loading overlay — shown until iframe finishes loading */
+  .loading {
+    position: absolute;
+    inset: 0;
+    background: var(--void);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    pointer-events: none;
+    transition: opacity 0.4s ease 0.3s;
+    z-index: 10;
+  }
+  .loading.hide { opacity: 0; }
+  .loading-spinner {
+    width: 40px; height: 40px;
+    border: 2px solid rgba(0, 255, 136, 0.18);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+  }
+  .loading-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .loading-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: -8px;
+    max-width: 340px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Mobile */
+  @media (max-width: 720px) {
+    .topbar { padding: 0 12px; }
+    .brand-tag, .privacy-pill { display: none; }
+    .back-link { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Volver al sitio principal de Vortex AI Agents">
+    <span class="brand-logo">VORTEX <span>AI</span> AGENTS</span>
+    <span class="brand-tag">Cobranza · Demo</span>
+  </a>
+  <div class="topbar-right">
+    <span class="privacy-pill">Tu Excel no sale del navegador</span>
+    <a class="back-link" href="/">← Volver al sitio</a>
+  </div>
+</header>
+
+<div class="iframe-wrap">
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Cargando dashboard</div>
+    <div class="loading-sub">
+      Si la app llevaba rato sin uso, Streamlit Cloud puede tardar ~30 s en despertar.
+      Solo pasa la primera vez.
+    </div>
+  </div>
+  <iframe
+    src="https://cobranza-demo.streamlit.app/?embed=true&embed_options=hide_toolbar"
+    title="Cobranza Inteligente — Demo"
+    loading="eager"
+    onload="document.getElementById('loading').classList.add('hide')"
+    allow="clipboard-read; clipboard-write"
+  ></iframe>
+</div>
+
+<script>
+  // Failsafe: hide loading after 35s regardless (in case onload doesn't fire from cross-origin frame)
+  setTimeout(function () {
+    var el = document.getElementById('loading');
+    if (el) el.classList.add('hide');
+  }, 35000);
+</script>
+
+</body>
+</html>
