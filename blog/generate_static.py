@@ -76,6 +76,32 @@ def fmt_date(iso: str) -> str:
         return iso[:10]
 
 
+STRINGS = {
+    "en": {
+        "back": "&larr; All articles",
+        "home": "Home",
+        "blog": "Blog",
+        "agents": "Agents",
+        "book": "Book a Call",
+        "cta_title": "Ready to see what AI agents can do for your business?",
+        "cta_body": "We build connected teams of AI that work inside your operations — no new tools to learn.",
+        "cta_btn": "Book a free strategy call &rarr;",
+        "footer": "&copy; 2026 Vortex AI Agents &middot; <a href=\"https://vortexagents.ai\">vortexagents.ai</a> &middot; The Woodlands, TX",
+    },
+    "es": {
+        "back": "&larr; Todos los artículos",
+        "home": "Inicio",
+        "blog": "Blog",
+        "agents": "Agentes",
+        "book": "Agendar Llamada",
+        "cta_title": "¿Listo para ver lo que los agentes de IA pueden hacer por tu negocio?",
+        "cta_body": "Construimos equipos conectados de IA que trabajan dentro de tu operación — sin herramientas nuevas que aprender.",
+        "cta_btn": "Agenda una llamada gratis &rarr;",
+        "footer": "&copy; 2026 Vortex AI Agents &middot; <a href=\"https://vortexagents.ai\">vortexagents.ai</a> &middot; México y Houston, TX",
+    },
+}
+
+
 def generate_html(post: dict) -> str:
     """Generate a complete static HTML page for a blog post."""
     title = post.get("meta_title") or post["title"]
@@ -85,6 +111,10 @@ def generate_html(post: dict) -> str:
     body_html = md_to_html(post.get("body", ""))
     pub_date = fmt_date(post.get("published_at", ""))
     canonical = f"{BASE_URL}/blog/{slug}.html"
+    lang = post.get("lang", "en")
+    if lang not in STRINGS:
+        lang = "en"
+    s = STRINGS[lang]
 
     # Strip the H1 from body if it matches the title (avoid duplicate)
     body_html = re.sub(r"^<h1>.*?</h1>\n?", "", body_html, count=1)
@@ -97,6 +127,7 @@ def generate_html(post: dict) -> str:
             "headline": post["title"],
             "description": description,
             "keywords": keyword,
+            "inLanguage": lang,
             "datePublished": post.get("published_at", ""),
             "author": {
                 "@type": "Person",
@@ -114,7 +145,7 @@ def generate_html(post: dict) -> str:
     )
 
     return f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="{lang}">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -179,15 +210,15 @@ def generate_html(post: dict) -> str:
 <nav>
   <a href="/" class="logo">VORTEX <span>AI</span></a>
   <div class="nav-links">
-    <a href="/">Home</a>
-    <a href="/blog/" class="active">Blog</a>
-    <a href="/#solution">Agents</a>
-    <a href="/#cta" class="cta-btn">Book a Call</a>
+    <a href="/">{s["home"]}</a>
+    <a href="/blog/" class="active">{s["blog"]}</a>
+    <a href="/#solution">{s["agents"]}</a>
+    <a href="/#cta" class="cta-btn">{s["book"]}</a>
   </div>
 </nav>
 
 <article class="article-wrap">
-  <a href="/blog/" class="back-link">&larr; All articles</a>
+  <a href="/blog/" class="back-link">{s["back"]}</a>
   <div class="post-meta">
     <span class="post-keyword">{keyword}</span>
     {pub_date}
@@ -197,14 +228,14 @@ def generate_html(post: dict) -> str:
 {body_html}
   </div>
   <div class="post-cta">
-    <h3>Ready to see what AI agents can do for your business?</h3>
-    <p>We build connected teams of AI that work inside your operations — no new tools to learn.</p>
-    <a href="/#cta" class="cta-btn" style="display:inline-block;margin-top:.25rem;">Book a free strategy call &rarr;</a>
+    <h3>{s["cta_title"]}</h3>
+    <p>{s["cta_body"]}</p>
+    <a href="/#cta" class="cta-btn" style="display:inline-block;margin-top:.25rem;">{s["cta_btn"]}</a>
   </div>
 </article>
 
 <footer>
-  &copy; 2026 Vortex AI Agents &middot; <a href="https://vortexagents.ai">vortexagents.ai</a> &middot; The Woodlands, TX
+  {s["footer"]}
 </footer>
 
 </body>
