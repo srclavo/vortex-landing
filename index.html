@@ -5,10 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vortex AI Agents — A Team of AI That Runs Your Business Operations</title>
 <meta name="description" content="We build connected teams of AI agents that run your business operations 24/7 — leads, scheduling, follow-up, reviews, and visibility. One system, not ten tools. The Woodlands, TX.">
+<link rel="canonical" href="https://vortexagents.ai/" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<!-- Social / Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vortex AI Agents — A Team of AI That Runs Your Business Operations">
+<meta property="og:description" content="Connected teams of AI agents that run your operations 24/7 — plus full vertical products: Solida 2026 (insurance claims) and Sereno (funeral homes). One system, not ten tools.">
+<meta property="og:url" content="https://vortexagents.ai/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vortex AI Agents">
+<meta name="twitter:description" content="Connected AI agents + full vertical products (Solida 2026, Sereno). One system, not ten tools.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080a0f'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%2300ff88' font-family='Arial,sans-serif' font-weight='bold'%3EV%3C/text%3E%3C/svg%3E">
 <script id="ld-local-business" type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -108,6 +118,7 @@
     <li><a href="/mercado/">Mercado Demo</a></li>
     <li><a href="/abstorage/">ABStorage Demo</a></li>
     <li><a href="/morning-crew.html" class="nav-link--new">Morning Crew <span class="nav-new-badge">NEW</span></a></li>
+    <li><a href="https://serenofunerarias.com" target="_blank" rel="noopener" class="nav-link--new">Sereno <span class="nav-new-badge">NEW</span></a></li>
     <!-- Property Tax: internal use only, not linked publicly -->
   </ul>
   <div class="nav-right">
@@ -177,7 +188,7 @@
   <div class="ticker-track">
     <div class="t-item"><span class="dot">●</span><span data-key="ticker1">One Connected AI Team</span></div>
     <div class="t-item"><span class="dot">●</span><span data-key="ticker2">Leads · Scheduling · Follow-Up · Reviews · Visibility</span></div>
-    <div class="t-item"><span class="dot">●</span><span data-key="ticker3">Medical · Dental · Freight · Professional Services</span></div>
+    <div class="t-item"><span class="dot">●</span><span>Medical · Freight · Insurance Claims · Collections · Funeral</span></div>
     <div class="t-item"><span class="dot">●</span><span data-key="ticker4">24/7 Operations</span></div>
     <div class="t-item"><span class="dot">●</span><span data-key="ticker5">Month-to-Month · No Contracts</span></div>
     <div class="t-item"><span class="dot">●</span><span data-key="ticker6">One System Replaces Ten Tools</span></div>
@@ -233,6 +244,68 @@
   </div>
 </section>
 
+<!-- FLAGSHIP PRODUCTS -->
+<section class="fp-teaser section section-bg-dark" id="products">
+  <style>
+    .fp-teaser{text-align:center;}
+    .fp-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);border-radius:4px;padding:5px 12px;margin-bottom:22px;}
+    .fp-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5.5vw,3.8rem);line-height:.95;letter-spacing:.03em;color:var(--white);margin-bottom:14px;}
+    .fp-headline .g{color:var(--green);}
+    .fp-sub{font-size:.95rem;color:var(--muted);max-width:580px;margin:0 auto 44px;line-height:1.6;}
+    .fp-grid{display:grid;grid-template-columns:1fr;gap:22px;max-width:920px;margin:0 auto;text-align:left;}
+    @media(min-width:760px){.fp-grid{grid-template-columns:1fr 1fr;}}
+    .fp-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:30px;transition:transform .2s,border-color .2s;}
+    .fp-card:hover{transform:translateY(-3px);}
+    .fp-card.solida{border-color:rgba(251,146,60,.3);}
+    .fp-card.sereno{border-color:rgba(109,138,119,.4);}
+    .fp-badge{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:16px;}
+    .fp-card.solida .fp-badge{color:var(--orange);background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);}
+    .fp-card.sereno .fp-badge{color:var(--sereno);background:rgba(109,138,119,.12);border:1px solid rgba(109,138,119,.35);}
+    .fp-name{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:.03em;color:var(--white);line-height:1;}
+    .fp-tag{font-size:.85rem;color:var(--muted);margin:6px 0 16px;}
+    .fp-feats{list-style:none;display:grid;gap:9px;margin-bottom:22px;}
+    .fp-feats li{font-size:.82rem;color:var(--white);opacity:.85;padding-left:20px;position:relative;line-height:1.4;}
+    .fp-feats li::before{content:"→";position:absolute;left:0;color:var(--green);}
+    .fp-card.solida .fp-feats li::before{color:var(--orange);}
+    .fp-card.sereno .fp-feats li::before{color:var(--sereno);}
+    .fp-cta{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;color:var(--white);}
+    .fp-cta svg{transition:transform .2s;} .fp-cta:hover svg{transform:translateX(3px);}
+  </style>
+  <div class="inner">
+    <div class="fp-eyebrow"><span>●</span>Flagship Products</div>
+    <h2 class="fp-headline">FULL VERTICAL <span class="g">OPERATING SYSTEMS.</span></h2>
+    <p class="fp-sub">Beyond drop-in agents: two complete platforms — accounting, operations, and AI agents in one system — each spin-off-ready for its industry.</p>
+    <div class="fp-grid">
+      <div class="fp-card solida">
+        <span class="fp-badge">🏗️ Insurance Claims · Live</span>
+        <div class="fp-name">Solida 2026</div>
+        <p class="fp-tag">Claims &amp; restoration management + double-entry accounting.</p>
+        <ul class="fp-feats">
+          <li>AI quoting from historical claims — 30 min to 5 min</li>
+          <li>Photo classifier: auto-categorize damage &amp; repair</li>
+          <li>AR agent: 30/60/90-day alerts by severity</li>
+          <li>Automated accounting entry per transaction</li>
+          <li>Multi-carrier (Chubb, GNP, Afirme, Qualitas)</li>
+        </ul>
+        <a class="fp-cta" href="#cta">Request a demo <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="fp-card sereno">
+        <span class="fp-badge">🕯️ Funeral Homes · Live</span>
+        <div class="fp-name">Sereno</div>
+        <p class="fp-tag">The operating system + AI agents for funeral homes.</p>
+        <ul class="fp-feats">
+          <li>24/7 WhatsApp reception that creates the case</li>
+          <li>Stage board + document gate — nothing closes without paperwork</li>
+          <li>Double-entry accounting with per-case profit</li>
+          <li>Cross-border repatriation MX↔USA</li>
+          <li>"Mi Memoria" digital memorial + live-streamed ceremonies</li>
+        </ul>
+        <a class="fp-cta" href="https://serenofunerarias.com" target="_blank" rel="noopener">Visit serenofunerarias.com <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- VERTICALS -->
 <section id="verticals" class="section section-bg-surface">
   <div class="inner">
@@ -263,19 +336,7 @@
           <li data-key="fr_f5">Carrier scoring: punctuality, compliance, rate acceptance</li>
         </ul>
       </div>
-      <div class="v-card fade d2" style="border-color:rgba(251,146,60,.25);">
-        <div class="v-label" style="color:var(--orange)">🏗️ Insurance Claims</div>
-        <div class="v-title">Claims &<br>Restoration</div>
-        <p class="v-desc">Managing insurance claims across multiple carriers, crews, and vendors — with photos, quotes, invoices, and collections — shouldn't depend on a 15-year-old system. Our agents modernize the entire workflow.</p>
-        <ul class="v-features">
-          <li>AI-powered quoting from historical claims data — 30 min to 5 min</li>
-          <li>Photo classifier: auto-categorize damage, before/after, repair photos</li>
-          <li>Accounts receivable agent: daily scan, 30/60/90-day alerts by severity</li>
-          <li>Automated accounting entries for every operational transaction</li>
-          <li>Multi-carrier management (Chubb, GNP, Afirme, Qualitas)</li>
-        </ul>
-      </div>
-      <div class="v-card fade d3" style="border-color:rgba(167,139,250,.25);">
+      <div class="v-card fade d2" style="border-color:rgba(167,139,250,.25);">
         <div class="v-label" style="color:var(--purple)">💰 Collections</div>
         <div class="v-title">Accounts<br>Receivable</div>
         <p class="v-desc">Your AR team spends hours deciding who to call and what to say. Our AI analyzes payment patterns, prioritizes accounts by risk, and generates personalized follow-up strategies — so you collect faster with less effort.</p>
@@ -463,6 +524,9 @@
       <select id="bk-business">
         <option value="medical">Medical / Dental Practice</option>
         <option value="freight">Freight Brokerage</option>
+        <option value="insurance">Insurance Claims (Solida)</option>
+        <option value="funeral">Funeral Home (Sereno)</option>
+        <option value="collections">Collections / AR</option>
         <option value="other">Other</option>
       </select>
 
@@ -580,7 +644,5 @@ async function submitBooking(){
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/main.js" defer></script>
 <script src="js/i18n.js" defer></script>
 <script src="js/chat.js" defer></script>
-<!-- PropTax Widget — powered by Vortex AI Agents -->
-<script src="https://proptax-demo.ngrok.app/widget.js" async></script>
 </body>
 </html>
