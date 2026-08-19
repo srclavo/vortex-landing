@@ -12,6 +12,7 @@ import json
 import os
 import re
 import sys
+import urllib.parse
 import urllib.request
 
 API = "https://api.vortexagents.ai/api/v1/blog/posts"
@@ -245,7 +246,9 @@ def generate_html(post: dict) -> str:
 
 def fetch_posts(slug=None):
     """Fetch posts from the API."""
-    url = f"{API}/{slug}" if slug else API
+    # URL-quote the slug so UTF-8 characters (á é í ó ú ñ) don't break urllib's
+    # default ASCII header encoding when building the request.
+    url = f"{API}/{urllib.parse.quote(slug, safe='')}" if slug else API
     req = urllib.request.Request(url, headers={
         "X-API-Key": "vortex_public_2026",
         "User-Agent": "VortexBlogGenerator/1.0",
